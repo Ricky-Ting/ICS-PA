@@ -38,6 +38,8 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -46,6 +48,8 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+	{"si","Step In",cmd_si},
+
 
   /* TODO: Add more commands */
 
@@ -75,6 +79,29 @@ static int cmd_help(char *args) {
   }
   return 0;
 }
+
+static int cmd_si(char *args) {
+	char *arg = strtok(NULL, " ");
+	if (arg == NULL) {
+		cpu_exec(1);
+	}
+	else {
+		int ins_num=atoi(arg);
+		if(ins_num>0)
+			cpu_exec((uint64_t)(ins_num));
+		else
+			printf("Parameter error! Need number!\n");
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
 
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
