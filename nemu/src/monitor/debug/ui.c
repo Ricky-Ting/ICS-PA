@@ -109,10 +109,10 @@ static int cmd_info(char *args) {
 	if (strcmp(arg,"r")==0) {
 		for(int i=0;i<8;i++) 
 			printf("%s \t %#x\n",regsl[i],reg_l(i));	
-		printf("%%eip \t %#x\n",cpu.eip);
+		printf("eip \t %#x\n",cpu.eip);
 	}
 	else if(strcmp(arg,"w")==0) {
-		printf("Function unaviable for now!");
+		printf("Function unaviable for now!\n");
 	}
 	else
 		printf("Unkown command '%s'\n",arg);
