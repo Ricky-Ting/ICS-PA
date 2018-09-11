@@ -40,6 +40,9 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
+static int cmd_info(char *args);
+
+
 static struct {
   char *name;
   char *description;
@@ -49,7 +52,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
 	{"si","Step In",cmd_si},
-
+	{"info","Print info of registers or watchpoints",cmd_info},
 
   /* TODO: Add more commands */
 
@@ -95,7 +98,26 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
-
+static int cmd_info(char *args) {
+	extern CPU_state cpu;
+	extern const char *regsl[];
+	char *arg = strtok(NULL," ");
+	if (arg == NULL) {
+		printf("SUBCMD Needed! w or r\n");
+		return 0;
+	}
+	if (strcmp(arg,"r")==0) {
+		for(int i=0;i<8;i++) 
+			printf("%s \t %#x\n",regsl[i],reg_l(i));	
+		printf("%%eip \t %#x\n",cpu.eip);
+	}
+	else if(strcmp(arg,"w")==0) {
+		printf("Function unaviable for now!");
+	}
+	else
+		printf("Unkown command '%s'\n",arg);
+	return 0;
+}
 
 
 
