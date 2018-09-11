@@ -128,8 +128,8 @@ static int cmd_x(char *args) {
 	int addr=strtol(arg2,NULL,16);
 	for(int i=0;i<num;i++) {
 		if(i%4==0)
-			printf("%#x \t:",addr);
-		printf("%#x \t",vaddr_read(addr,4));
+			printf("%#x: ",addr);
+		printf("%#x  ",vaddr_read(addr,4));
 		if(i%4==0 && i!=0)
 			printf("\n");
 	}
