@@ -42,6 +42,7 @@ static int cmd_si(char *args);
 
 static int cmd_info(char *args);
 
+static int cmd_x(char *args);
 
 static struct {
   char *name;
@@ -53,7 +54,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 	{"si","Step In",cmd_si},
 	{"info","Print info of registers or watchpoints",cmd_info},
-
+	{"x","Print the value of specific address",cmd_x}
   /* TODO: Add more commands */
 
 };
@@ -120,7 +121,21 @@ static int cmd_info(char *args) {
 }
 
 
-
+static int cmd_x(char *args) {
+	char *arg1 = strtok(NULL," ");
+	int num = atoi(arg1);
+	char *arg2 = strtok(NULL," ");
+	int addr=strtol(arg2,NULL,16);
+	for(int i=0;i<num;i++) {
+		if(i%4==0)
+			printf("%#x \t:",addr);
+		printf("%#x \t",vaddr_read(addr,4));
+		if(i%4==0 && i!=0)
+			printf("\n");
+	}
+	printf("\n");
+	return 0;
+}
 
 
 
