@@ -130,7 +130,7 @@ static int cmd_x(char *args) {
 		if(i%4==0)
 			printf("%#x: ",addr);
 		printf("%#x  ",vaddr_read(addr,4));
-		if(i%4==0 && i!=0)
+		if(i%4==3)
 			printf("\n");
 		addr+=4;
 	}
