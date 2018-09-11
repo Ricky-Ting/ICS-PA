@@ -132,6 +132,7 @@ static int cmd_x(char *args) {
 		printf("%#x  ",vaddr_read(addr,4));
 		if(i%4==0 && i!=0)
 			printf("\n");
+		addr+=4;
 	}
 	printf("\n");
 	return 0;
