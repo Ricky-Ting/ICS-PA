@@ -90,7 +90,7 @@ static int cmd_si(char *args) {
 		if(ins_num>0)
 			cpu_exec((uint64_t)(ins_num));
 		else
-			printf("Parameter error! Need number!\n");
+			printf("Parameter error! Need positive number!\n");
 	}
 	return 0;
 }
