@@ -85,15 +85,17 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args) {
+	//Extract the argument 
 	char *arg = strtok(NULL, " ");
-	if (arg == NULL) {
+
+	if (arg == NULL) { //if no argument given, use the default value 1
 		cpu_exec(1);
 	}
 	else {
-		int ins_num=atoi(arg);
-		if(ins_num>0)
+		int ins_num=atoi(arg); //Translate the string to int, if no number in the string, it returns 0;
+		if(ins_num>0) //A postive number
 			cpu_exec((uint64_t)(ins_num));
-		else
+		else       // We need a positive number to execute the si.
 			printf("Parameter error! Need positive number!\n");
 	}
 	return 0;
@@ -101,18 +103,18 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args) {
 	extern CPU_state cpu;
-	extern const char *regsl[];
-	char *arg = strtok(NULL," ");
-	if (arg == NULL) {
+	extern const char *regsl[];   // We have to get the cpu state from other files
+	char *arg = strtok(NULL," "); // Extract the argument 
+	if (arg == NULL) {        // No argument, print the error.
 		printf("SUBCMD Needed! w or r\n");
 		return 0;
 	}
-	if (strcmp(arg,"r")==0) {
-		for(int i=0;i<8;i++) 
-			printf("%s \t %#x\n",regsl[i],reg_l(i));	
+	if (strcmp(arg,"r")==0) {     // info r
+		for(int i=0;i<8;i++)                             
+			printf("%s \t %#x\n",regsl[i],reg_l(i));	 
 		printf("eip \t %#x\n",cpu.eip);
 	}
-	else if(strcmp(arg,"w")==0) {
+	else if(strcmp(arg,"w")==0) {    // info w
 		printf("Function unaviable for now!\n");
 	}
 	else
@@ -121,18 +123,20 @@ static int cmd_info(char *args) {
 }
 
 
-static int cmd_x(char *args) {
+static int cmd_x(char *args) { 
 	char *arg1 = strtok(NULL," ");
 	int num = atoi(arg1);
+
 	char *arg2 = strtok(NULL," ");
 	int addr=strtol(arg2,NULL,16);
+
 	for(int i=0;i<num;i++) {
-		if(i%4==0)
+		if(i%4==0)                      // Every four print a address
 			printf("%#x: ",addr);
 		printf("%#x  ",vaddr_read(addr,4));
-		if(i%4==3)
+		if(i%4==3)                      // Every four in a line
 			printf("\n");
-		addr+=4;
+		addr+=4;                       // Increase the address
 	}
 	printf("\n");
 	return 0;
