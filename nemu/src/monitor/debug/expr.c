@@ -156,13 +156,13 @@ uint32_t eval(int p, int q)
 				}while(tokens[a].type!=TK_RP);
 			}
 			else if(tokens[a].type==TK_PLUS || tokens[a].type==TK_MINU) {
-				if(op!= TK_PLUS && op!=TK_MINU) {
+				if(1) {
 					op=tokens[a].type;
 					pos=a;
 				}
 			}
 			else if(tokens[a].type==TK_MULT || tokens[a].type==TK_DIVI) {
-				if(op==-1) {
+				if(op==-1 || op==TK_MULT || op==TK_DIVI) {
 					op=tokens[a].type;
 					pos=a;
 				}
