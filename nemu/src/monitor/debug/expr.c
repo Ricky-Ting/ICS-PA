@@ -143,6 +143,7 @@ uint32_t eval(int p, int q)
 	}
 	else if (p==q) 
 	{
+		printf("%u ",(uint32_t)(strtol(tokens[p].str,NULL,10)));
 		return (uint32_t)(strtol(tokens[p].str,NULL,10));
 	}
 	else if (check_parentheses(p,q)) 
