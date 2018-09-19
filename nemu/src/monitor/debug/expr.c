@@ -187,8 +187,8 @@ uint32_t eval(int p, int q)
 
 		uint32_t val1 = eval(p,pos-1);
 		uint32_t val2 = eval(pos+1,q);	
-		if(val1==0xffffffff  || val2==0xffffffff)
-				return 0xffffffff;
+	//	if(val1==0xffffffff  || val2==0xffffffff)
+		//		return 0xffffffff;
 		switch(op) {
 			case TK_PLUS: return val1+val2;
 			case TK_MINU: return val1-val2;
