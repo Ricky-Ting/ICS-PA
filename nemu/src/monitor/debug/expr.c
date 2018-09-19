@@ -142,10 +142,7 @@ uint32_t eval(int p, int q)
 		return 0xffffffff;           // Use 0xffffffff to indicate the error.
 	}
 	else if (p==q) 
-	{
-		printf("%u ",(uint32_t)(strtol(tokens[p].str,NULL,10)));
 		return (uint32_t)(strtol(tokens[p].str,NULL,10));
-	}
 	else if (check_parentheses(p,q)) 
 		return eval(p+1,q-1);
 	else {
@@ -193,7 +190,12 @@ uint32_t eval(int p, int q)
 			case TK_PLUS: return val1+val2;
 			case TK_MINU: return val1-val2;
 			case TK_MULT: return val1*val2;
-			case TK_DIVI: return val1/val2; 
+			case TK_DIVI: 
+				if(val2==0) { 
+					printf("divide by 0\n");
+					exit(0);
+				}
+				return val1/val2; 
 		}
 	}
 	return 0xffffffff;
