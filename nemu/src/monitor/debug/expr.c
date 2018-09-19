@@ -178,10 +178,10 @@ uint32_t eval(int p, int q)
 			a++;
 		}
 		switch(op) {
-			case TK_PLUS: printf("+\n"); break;
-			case TK_MINU: printf("-\n"); break;
-			case TK_MULT: printf("*\n"); break;
-			case TK_DIVI: printf("/\n"); break;
+			case TK_PLUS: printf("+ %d\n",pos); break;
+			case TK_MINU: printf("- %d\n",pos); break;
+			case TK_MULT: printf("* %d\n",pos); break;
+			case TK_DIVI: printf("/ %d\n",pos); break;
 		
 		}
 
