@@ -13,6 +13,8 @@ uint32_t choose(uint32_t n) {
 }
 
 void gen_num(void) {
+	if(choose(10)==5)
+		strcat(buf," ");
 	uint32_t number= (uint32_t)(rand()%65536); 
 	uint32_t tmp=(((uint32_t)(rand()%65536))<<16);
 	if(choose(10)==5)
@@ -24,6 +26,8 @@ void gen_num(void) {
 }
 
 void gen_rand_op() {
+	if(choose(10)==5)
+		strcat(buf," ");
 	switch(choose(4)) {
 		case 0 : strcat(buf,"+"); break;
 		case 1 : strcat(buf,"-"); break;
