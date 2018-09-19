@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 	/* My add */
 	FILE * fp=fopen("./tools/gen-expr/input","r");
 	if(fp==NULL) {
-		printf("File error");
+		printf("File error\n");
 		exit(1);
 	}
 	char e[65536];
@@ -25,13 +25,13 @@ int main(int argc, char *argv[]) {
 		fscanf(fp,"%s",e);
 		uint32_t tmp=expr(e,&success);
 		if(!success) {
-			printf("Match Failed at %d line,with equation: %s",i+1,e);
+			printf("Match Failed at %d line,with equation\n: %s",i+1,e);
 			exit(0);
 		}
 		if(tmp==ans)
-			printf("Success");
+			printf("Success\n");
 		else {
-			printf("Error at %d line, with the equation: %s, should get %u, but get %u",i,e,ans,tmp);
+			printf("Error at %d line, with the equation: %s, should get %u, but get %u\n",i,e,ans,tmp);
 			exit(0);
 		}
 	}
