@@ -28,7 +28,7 @@ void gen_rand_op() {
 		case 0 : strcat(buf,"+"); break;
 		case 1 : strcat(buf,"-"); break;
 		case 2 : strcat(buf,"*"); break;
-		case 3 : strcat(buf,"/"); break;
+		case 3 : strcat(buf,"-"); break;
 	}
 	return;
 }

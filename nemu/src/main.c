@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 		if(tmp==ans)
 			printf("Line:%d: Success\n",i+1);
 		else {
-			printf("Error at %d line, with the equation: %s, should get %u, but get %u\n",i,e,ans,tmp);
+			printf("Error at %d line, with the equation: %s, should get %u, but get %u\n",i+1,e,ans,tmp);
 			exit(0);
 		}
 	}
