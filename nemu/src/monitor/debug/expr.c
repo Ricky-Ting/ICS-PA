@@ -138,6 +138,7 @@ uint32_t eval(int p, int q)
 {
 	if(p>q) {
 		printf("This expr is invalid.\n");
+		exit(0);
 		return 0xffffffff;           // Use 0xffffffff to indicate the error.
 	}
 	else if (p==q) 
