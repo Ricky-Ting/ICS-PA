@@ -49,12 +49,12 @@ static inline void gen_rand_expr() {
 			strcat(buf,")");
 			break;
 		default:
-			if(strlen(buf)>100)
+			if(strlen(buf)>20)
 				gen_num();
 			else
 			 gen_rand_expr();
 			gen_rand_op();
-			if(strlen(buf)>100)
+			if(strlen(buf)>20)
 				gen_num();
 			else
 				gen_rand_expr();
