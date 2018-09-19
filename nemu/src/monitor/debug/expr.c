@@ -84,10 +84,10 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+     /*   Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
         position += substr_len;
-
+		*/
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
@@ -174,6 +174,7 @@ int eval(int p, int q)
 			}
 			a++;
 		}
+		/* debug code
 		switch(op) {
 			case TK_PLUS: printf("+ %d\n",pos); break;
 			case TK_MINU: printf("- %d\n",pos); break;
@@ -181,6 +182,7 @@ int eval(int p, int q)
 			case TK_DIVI: printf("/ %d\n",pos); break;
 		
 		}
+		*/
 
 		int val1 = eval(p,pos-1);
 		int val2 = eval(pos+1,q);	
