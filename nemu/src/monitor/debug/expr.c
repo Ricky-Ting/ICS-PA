@@ -1,4 +1,6 @@
 #include "nemu.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -6,8 +8,14 @@
 #include <sys/types.h>
 #include <regex.h>
 
+
+bool check_parentheses(int p, int q);
+uint32_t eval(int p, int q); 
+
+
+
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC
 
   /* TODO: Add more token types */
 
@@ -23,7 +31,13 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+	{"\\(", TK_LP},         // left parenthesis
+	{"\\)",TK_RP},					// right parenthesis
+	{"\\*", TK_MULT},					//multiply
+	{"/", TK_DIVI},           // divide
+  {"\\+", TK_PLUS},         // plus
+	{"-",TK_MINU},            // minus
+	{"[0-9]+", TK_DEC},    // decimal number
   {"==", TK_EQ}         // equal
 };
 
@@ -53,7 +67,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-Token tokens[32];
+Token tokens[65536];
 int nr_token;
 
 static bool make_token(char *e) {
@@ -80,7 +94,17 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+					case TK_DEC : 
+						tokens[nr_token].type=TK_DEC;  
+						//tokens[nr_token].str=substr_start;
+						strncpy(tokens[nr_token].str,substr_start,substr_len);
+						nr_token++;
+						break;
+					case TK_NOTYPE :	break;
+          default: 
+						tokens[nr_token].type=rules[i].token_type;
+						nr_token++;
+						break;
         }
 
         break;
@@ -99,11 +123,81 @@ static bool make_token(char *e) {
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
-    return 0;
+    return 0xffffffff;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+ return  eval(0,nr_token-1);
+
 
   return 0;
+}
+
+uint32_t eval(int p, int q)
+{
+	if(p>q) {
+		printf("This expr is invalid.\n");
+		return 0xffffffff;           // Use 0xffffffff to indicate the error.
+	}
+	else if (p==q) 
+		return atoi(tokens[p].str);
+	else if (check_parentheses(p,q)) 
+		return eval(p+1,q-1);
+	else {
+		int op=-1;
+		int pos=-1;
+		int a=p; int b=q;
+		while(a<b)
+		{
+			if(tokens[a].type==TK_LP) {
+				do {
+					a++;
+				}while(tokens[a].type!=TK_RP);
+			}
+			else if(tokens[a].type==TK_PLUS || tokens[a].type==TK_MINU) {
+				if(op!= TK_PLUS && op!=TK_MINU) {
+					op=tokens[a].type;
+					pos=a;
+				}
+			}
+			else if(tokens[a].type==TK_MULT || tokens[a].type==TK_DIVI) {
+				if(op==-1) {
+					op=tokens[a].type;
+					pos=a;
+				}
+			}
+			a++;
+		}
+		uint32_t val1 = eval(p,pos-1);
+		uint32_t val2 = eval(pos+1,q);	
+		if(val1==0xffffffff  || val2==0xffffffff)
+				return 0xffffffff;
+		switch(op) {
+			case TK_PLUS: return val1+val2;
+			case TK_MINU: return val1-val2;
+			case TK_MULT: return val1*val2;
+			case TK_DIVI: return val1/val2; 
+		}
+	}
+	return 0xffffffff;
+}
+
+
+bool check_parentheses(int p, int q) {
+	bool flag=true;
+	if(tokens[p].type!=TK_LP || tokens[q].type!=TK_RP)
+		flag=false;
+	int cnt=0;
+	for(int i=p;i<=q;i++) {
+		if(tokens[i].type==TK_LP)
+			cnt++;
+		if(tokens[i].type==TK_RP)
+			cnt--;
+		if(cnt==0 && i!=q)
+			flag=false;
+		if(cnt<0)
+			assert(0);
+	}
+	if(cnt!=0) flag=false;
+	return flag;
 }
