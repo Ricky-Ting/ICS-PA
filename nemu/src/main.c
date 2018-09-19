@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 	char e[65536];
 	uint32_t ans;
 	bool success;
-	for(int i=0;i<100;i++) {
+	for(int i=0;i<1000;i++) {
 		fscanf(fp,"%d",&ans);
 		e[0]='\0';  success=true;
 		fscanf(fp,"%s",e);
@@ -29,15 +29,14 @@ int main(int argc, char *argv[]) {
 			exit(0);
 		}
 		if(tmp==ans)
-			printf("Success\n");
+			printf("Line:%d: Success\n",i+1);
 		else {
 			printf("Error at %d line, with the equation: %s, should get %u, but get %u\n",i,e,ans,tmp);
 			exit(0);
 		}
 	}
-	
-
 	fclose(fp);
+
 
 
   /* Receive commands from user. */
