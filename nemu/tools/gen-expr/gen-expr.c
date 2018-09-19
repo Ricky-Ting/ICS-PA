@@ -13,9 +13,9 @@ uint32_t choose(uint32_t n) {
 }
 
 void gen_num(void) {
-	uint32_t number= (uint32_t)(rand()%100); 
+	uint32_t number= (uint32_t)(rand()%65536); 
 	uint32_t tmp=(((uint32_t)(rand()%65536))<<16);
-	if(choose(10)==11)
+	if(choose(10)==5)
 		number+=tmp;
 	char str[32];
 	sprintf(str,"%u",number);
@@ -49,12 +49,12 @@ static inline void gen_rand_expr() {
 			strcat(buf,")");
 			break;
 		default:
-			if(strlen(buf)>20)
+			if(strlen(buf)>3000)
 				gen_num();
 			else
 			 gen_rand_expr();
 			gen_rand_op();
-			if(strlen(buf)>20)
+			if(strlen(buf)>3000)
 				gen_num();
 			else
 				gen_rand_expr();
