@@ -174,6 +174,14 @@ uint32_t eval(int p, int q)
 			}
 			a++;
 		}
+		switch(op) {
+			case TK_PLUS: printf("+\n"); break;
+			case TK_MINU: printf("-\n"); break;
+			case TK_MULT: printf("*\n"); break;
+			case TK_DIVI: printf("/\n"); break;
+		
+		}
+
 		uint32_t val1 = eval(p,pos-1);
 		uint32_t val2 = eval(pos+1,q);	
 		if(val1==0xffffffff  || val2==0xffffffff)
