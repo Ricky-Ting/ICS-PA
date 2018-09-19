@@ -13,7 +13,7 @@ uint32_t choose(uint32_t n) {
 }
 
 void gen_num(void) {
-	uint32_t number= (uint32_t)(rand()%65536); 
+	uint32_t number= (uint32_t)(rand()%100); 
 	uint32_t tmp=(((uint32_t)(rand()%65536))<<16);
 	if(choose(10)==11)
 		number+=tmp;
