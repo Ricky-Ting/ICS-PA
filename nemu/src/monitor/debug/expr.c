@@ -10,7 +10,7 @@
 
 
 bool check_parentheses(int p, int q);
-int eval(int p, int q); 
+uint32_t eval(int p, int q); 
 
 
 
@@ -138,7 +138,7 @@ uint32_t expr(char *e, bool *success) {
   return 0;
 }
 
-int eval(int p, int q)
+uint32_t eval(int p, int q)
 {
 	if(p>q) {
 		printf("This expr is invalid.\n");
@@ -146,7 +146,7 @@ int eval(int p, int q)
 		return 0xffffffff;           // Use 0xffffffff to indicate the error.
 	}
 	else if (p==q) 
-		return (int)(strtol(tokens[p].str,NULL,10));
+		return (uint32_t)(strtol(tokens[p].str,NULL,10));
 	else if (check_parentheses(p,q)) 
 		return eval(p+1,q-1);
 	else {
@@ -188,8 +188,8 @@ int eval(int p, int q)
 		}
 		*/
 
-		int val1 = eval(p,pos-1);
-		int val2 = eval(pos+1,q);	
+		uint32_t val1 = eval(p,pos-1);
+		uint32_t val2 = eval(pos+1,q);	
 	//	if(val1==0xffffffff  || val2==0xffffffff)
 		//		return 0xffffffff;
 		switch(op) {
