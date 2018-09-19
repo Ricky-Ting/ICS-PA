@@ -160,6 +160,7 @@ uint32_t eval(int p, int q)
 						cnt--;
 					a++;
 				}while(cnt>0);
+				a--;
 			}
 			else if(tokens[a].type==TK_PLUS || tokens[a].type==TK_MINU) {
 					op=tokens[a].type;
