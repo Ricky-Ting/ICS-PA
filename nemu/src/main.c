@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
   int is_batch_mode = init_monitor(argc, argv);
 	
 	/* My add */
-	FILE * fp=fopen("../tools/gen-expr/input","r");
+	FILE * fp=fopen("./tools/gen-expr/input","r");
 	if(fp==NULL) {
 		printf("File error");
 		exit(1);
