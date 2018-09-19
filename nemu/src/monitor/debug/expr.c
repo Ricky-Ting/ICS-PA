@@ -151,10 +151,15 @@ uint32_t eval(int p, int q)
 		int a=p; int b=q;
 		while(a<b)
 		{
+			int cnt=0;
 			if(tokens[a].type==TK_LP) {
 				do {
+					if(tokens[a].type==TK_LP) 
+						cnt++;
+					if(tokens[a].type==TK_RP) 
+						cnt--;
 					a++;
-				}while(tokens[a].type!=TK_RP);
+				}while(cnt>0);
 			}
 			else if(tokens[a].type==TK_PLUS || tokens[a].type==TK_MINU) {
 					op=tokens[a].type;
