@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 	for(int i=0;i<1000;i++) {
 		fscanf(fp,"%d",&ans);
 		e[0]='\0';  success=true;
-		fscanf(fp,"%s",e);
+		fgets(e,65536,fp);
 		uint32_t tmp=expr(e,&success);
 		if(!success) {
 			printf("Match Failed at %d line,with equation\n: %s",i+1,e);
