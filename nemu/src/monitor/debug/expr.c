@@ -142,7 +142,10 @@ uint32_t eval(int p, int q)
 		return 0xffffffff;           // Use 0xffffffff to indicate the error.
 	}
 	else if (p==q) 
+	{
+		printf("%d",atoi(tokens[p].str));
 		return atoi(tokens[p].str);
+	}
 	else if (check_parentheses(p,q)) 
 		return eval(p+1,q-1);
 	else {
