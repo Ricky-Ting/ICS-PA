@@ -143,8 +143,7 @@ uint32_t eval(int p, int q)
 	}
 	else if (p==q) 
 	{
-		printf("%d ",atoi(tokens[p].str));
-		return atoi(tokens[p].str);
+		return (uint32_t)(strtol(tokens[p].str,NULL,10));
 	}
 	else if (check_parentheses(p,q)) 
 		return eval(p+1,q-1);
