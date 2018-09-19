@@ -26,7 +26,7 @@ void gen_num(void) {
 void gen_rand_op() {
 	switch(choose(4)) {
 		case 0 : strcat(buf,"+"); break;
-		case 1 : strcat(buf,"+"); break;
+		case 1 : strcat(buf,"-"); break;
 		case 2 : strcat(buf,"*"); break;
 		case 3 : strcat(buf,"/"); break;
 	}
