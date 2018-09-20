@@ -24,12 +24,6 @@ int main(int argc, char *argv[]) {
 		e[0]='\0';  success=true;
 		fgets(e,65536,fp);
 		e[strlen(e)-1]='\0';
-/*		for(int i=0;i<65536;i++) {
-			if(e[i]=='\n') {
-				e[i]='\0';
-				break;
-			}
-		} */
 		uint32_t tmp=expr(e,&success);
 		if(!success) {
 			printf("Match Failed at %d line,with equation\n: %s",i+1,e);
