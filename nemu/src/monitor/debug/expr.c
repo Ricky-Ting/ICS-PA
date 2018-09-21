@@ -15,7 +15,7 @@ long long eval(int p, int q);
 
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC
+  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC, TK_HEX, TK_REG, TK_NEQ, TK_AND, TK_DEREF_
 
   /* TODO: Add more token types */
 
@@ -29,7 +29,8 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
+  {"0x[0-9a-fA-F]+", TK_HEX}, //Hexadecimal number
+	{"\\$[A-Za-z]+",TK_REG},    // register
   {" +", TK_NOTYPE},    // spaces
 	{"\\(", TK_LP},         // left parenthesis
 	{"\\)",TK_RP},					// right parenthesis
@@ -38,7 +39,9 @@ static struct rule {
   {"\\+", TK_PLUS},         // plus
 	{"-",TK_MINU},            // minus
 	{"[0-9]+", TK_DEC},    // decimal number
-  {"==", TK_EQ}         // equal
+  {"==", TK_EQ},         // equal
+	{"!=",TK_NEQ},        // not equal
+	{"&&",TK_AND},        // AND
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -84,9 +87,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-  /*      Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
- */
 			
 
 						
