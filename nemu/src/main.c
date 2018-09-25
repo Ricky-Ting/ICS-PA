@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
   int is_batch_mode = init_monitor(argc, argv);
 
 
-
+/*
 	
 	FILE * fp=fopen("./tools/gen-expr/input","r");
 	if(fp==NULL) {
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	}
 	fclose(fp);
 
-
+*/
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);
