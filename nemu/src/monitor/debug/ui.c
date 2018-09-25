@@ -158,7 +158,7 @@ static int cmd_w(char *args) {
 		printf("Invalid Expr in cmd_w\n");
 		assert(0);
 	}
-	printf("Watchpoint %d: %s\n",tmp->NO,tmp->e);
+	printf("Watchpoint %d: %s with value: %#x\n",tmp->NO,tmp->e,tmp->value);
 
 	return 0;
 }
