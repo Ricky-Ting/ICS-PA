@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
 
-/*
+
 
 	
 	FILE * fp=fopen("./tools/gen-expr/input","r");
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	char e[65536];
 	uint32_t ans;
 	bool success;
-	for(int i=0;i<1000;i++) {
+	for(int i=0;i<100;i++) {
 		fscanf(fp,"%d",&ans);
 		e[0]='\0';  success=true;
 		fgets(e,65536,fp);
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	}
 	fclose(fp);
 
-*/
+
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);
