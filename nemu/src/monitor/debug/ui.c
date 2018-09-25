@@ -44,6 +44,10 @@ static int cmd_info(char *args);
 
 static int cmd_x(char *args);
 
+static int cmd_w(char *args);
+
+static int cmd_d(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -54,7 +58,9 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 	{"si","Step In",cmd_si},
 	{"info","Print info of registers or watchpoints",cmd_info},
-	{"x","Print the value of specific address",cmd_x}
+	{"x","Print the value of specific address",cmd_x},
+	{"w","Set a watchpoint",cmd_w},
+	{"d", "Delete a watchpoint",cmd_d}
   /* TODO: Add more commands */
 
 };
@@ -115,7 +121,9 @@ static int cmd_info(char *args) {
 		printf("eip \t %#x\n",cpu.eip);
 	}
 	else if(strcmp(arg,"w")==0) {    // info w
-		printf("Function unaviable for now!\n");
+		printf("Num\tExpr\tValue\n");
+
+
 	}
 	else
 		printf("Unkown command '%s'\n",arg);
@@ -142,7 +150,27 @@ static int cmd_x(char *args) {
 	return 0;
 }
 
+static int cmd_w(char *args) {
+	char * args1=strtok(NULL,"\0");
+	WP *tmp = new_wp();
+	strcpy(tmp->e,args1);
+	bool success=true;;
+	tmp->value = expr(tmp->e,&success);
+	if(!success) {
+		printf("Invalid Expr in cmd_w\n");
+		assert(0);
+	}
+	printf("Watchpoint %d: %s\n",tmp->NO,tmp->e);
 
+	return 0;
+}
+
+static int cmd_d(char *args) {
+	char * args1 = strtok(NULL," ");
+	int num=atoi(args1);
+	delete_wp(num);
+	return 0;
+}
 
 
 void ui_mainloop(int is_batch_mode) {

@@ -38,5 +38,17 @@ void free_wp(WP *wp) {
 	tmp->next=wp->next;
 	wp->next=free_;
 	free_=wp;
+}
 
+void delete_wp(int num) {
+	WP *tmp=head;
+	while(tmp!=NULL && tmp->NO!=num)
+		tmp=tmp->next;
+	if(tmp==NULL) {
+		printf("Watchpoint %d doesn't exisit\n",num);
+		assert(0);
+	}
+	free_wp(tmp);
+	printf("Watchpoint %d has been deleted\n",num);
+	return;
 }
