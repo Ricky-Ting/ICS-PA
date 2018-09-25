@@ -10,12 +10,12 @@
 
 
 bool check_parentheses(int p, int q);
-long long eval(int p, int q); 
+uint32_t eval(int p, int q); 
 
 
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC, TK_HEX, TK_REG, TK_NEQ, TK_AND, TK_DEREF_
+  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC, TK_HEX, TK_REG, TK_NEQ , TK_AND, TK_DEREF
 
   /* TODO: Add more token types */
 
@@ -107,7 +107,18 @@ static bool make_token(char *e) {
 						tokens[nr_token].str[substr_len]='\0';
 						nr_token++;
 						break;
+					case TK_HEX :
+						tokens[nr_token].type=TK_HEX;
+						strncpy(tokens[nr_token].str,substr_start,substr_len);
+						nr_token++;
+						break;
+					case TK_REG :
+						tokens[nr_token].type=TK_REG;
+						strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);
+						nr_token++;
+						break;
 					case TK_NOTYPE :	break;
+					
           default: 
 						tokens[nr_token].type=rules[i].token_type;
 						nr_token++;
@@ -130,27 +141,61 @@ static bool make_token(char *e) {
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
-    return 0xffffffff;
+    return 0;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
+	
+	for(int i=0;i<nr_token;i++) {
+		if(tokens[i].type=='*' && (i==0 || (tokens[i-1].type!=TK_DEC && tokens[i-1].type!=TK_HEX && tokens[i-1].type!=TK_RP && tokens[i-1].type!=TK_REG  )))
+			tokens[i].type= TK_DEREF;
+	}
+
+
  return (uint32_t)(eval(0,nr_token-1));
 
 
   return 0;
 }
 
-long long eval(int p, int q)
+uint32_t eval(int p, int q)
 {
+	extern CPU_state cpu;
+	extern const char *regsl[];
+	extern const char *regsw[];
+	extern const char *regsb[];
+
+
 	if(p>q) {
 		printf("This expr is invalid.\n");
 		exit(0);
 		return 0xffffffff;           // Use 0xffffffff to indicate the error.
 	}
-	else if (p==q) 
-		return (long long)(strtol(tokens[p].str,NULL,10));
+	else if (p==q) { 
+		if(tokens[p].type==TK_DEC)
+			return (uint32_t )(strtol(tokens[p].str,NULL,10));
+		if(tokens[p].type==TK_HEX)
+			return (uint32_t )(strtol(tokens[p].str,NULL,16));
+		if(tokens[p].type==TK_REG) {
+			for(int i=0;i<8;i++) 
+				if(strcmp(tokens[p].str,regsl[i]))
+					return reg_l(i);
+			for(int i=0;i<8;i++)
+				if(strcmp(tokens[p].str,regsw[i]))	
+					return reg_w(i);
+			for(int i=0;i<8;i++)
+				if(strcmp(tokens[p].str,regsb[i]))
+				return reg_b(i);
+			if(strcmp(tokens[p].str,"eip"))
+				return cpu.eip;
+			printf("The letters should not be captitalized!\n");
+		}
+	}
 	else if (check_parentheses(p,q)) 
 		return eval(p+1,q-1);
+	else if (q-p==1 && tokens[p].type==TK_DEREF) {
+		return vaddr_read(eval(p+1,q),4);
+	} 
 	else {
 		int op=-1;
 		int pos=-1;
@@ -190,8 +235,8 @@ long long eval(int p, int q)
 		}
 		*/
 
-		long long val1 = eval(p,pos-1);
-		long long val2 = eval(pos+1,q);	
+		uint32_t val1 = eval(p,pos-1);
+		uint32_t val2 = eval(pos+1,q);	
 	//	if(val1==0xffffffff  || val2==0xffffffff)
 		//		return 0xffffffff;
 		switch(op) {
@@ -204,6 +249,9 @@ long long eval(int p, int q)
 					exit(0);
 				}
 				return val1/val2; 
+			case TK_EQ: return val1==val2;
+			case TK_NEQ: return val1!=val2;
+			case TK_AND: return val1&&val2;
 		}
 	}
 	return 0xffffffff;
