@@ -68,7 +68,7 @@ void walk(void) {
 	WP *tmp=head;
 	printf("Num\tExpr\tValue\n");
 	while(tmp!=NULL) {
-		printf("%d\t%s\t%u\n",tmp->NO,tmp->e,tmp->value);
+		printf("%d\t%s\t%#x\n",tmp->NO,tmp->e,tmp->value);
 		tmp=tmp->next;
 	}
 	return;	
