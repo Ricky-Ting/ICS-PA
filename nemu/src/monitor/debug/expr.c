@@ -11,11 +11,11 @@
 
 bool check_parentheses(int p, int q);
 uint32_t eval(int p, int q); 
-
+int get_priority(int type);
 
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC, TK_HEX, TK_REG, TK_NEQ , TK_AND, TK_DEREF
+  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC, TK_HEX, TK_REG, TK_NEQ , TK_AND, TK_DEREF, TK_UND
 
   /* TODO: Add more token types */
 
@@ -198,7 +198,7 @@ uint32_t eval(int p, int q)
 	} 
 	else {
 		int op=-1;
-		int pos=-1;
+		int pos=TK_UND;
 		int a=p; int b=q;
 		while(a<b)
 		{
@@ -213,15 +213,9 @@ uint32_t eval(int p, int q)
 				}while(cnt>0);
 				a--;
 			}
-			else if(tokens[a].type==TK_PLUS || tokens[a].type==TK_MINU) {
-					op=tokens[a].type;
-					pos=a;
-			}
-			else if(tokens[a].type==TK_MULT || tokens[a].type==TK_DIVI) {
-				if(op==-1 || op==TK_MULT || op==TK_DIVI) {
-					op=tokens[a].type;
-					pos=a;
-				}
+			else if(get_priority(tokens[a].type)!=-1 && get_priority(tokens[a].type)<=get_priority(op)) {
+				op=tokens[a].type;
+				pos=a;
 			}
 			a++;
 		}
@@ -275,4 +269,29 @@ bool check_parentheses(int p, int q) {
 	}
 	if(cnt!=0) flag=false;
 	return flag;
+}
+
+
+int get_priority(int type) {
+	switch(type) {
+		case TK_MULT:
+		case TK_DIVI:
+			return 3;
+
+		case TK_PLUS:
+		case TK_MINU:
+			return 4;
+		
+		case TK_EQ:
+		case TK_NEQ:
+			return 7;
+
+		case TK_AND:
+			return 11;
+		
+		case TK_UND:
+			return 100;
+		default :
+			return -1;
+	}
 }
