@@ -153,7 +153,7 @@ static int cmd_w(char *args) {
 	WP *tmp = new_wp();
 	strcpy(tmp->e,args1);
 	bool success=true;;
-//	tmp->value = expr(tmp->e,&success);
+	tmp->value = expr(tmp->e,&success);
 	if(!success) {
 		printf("Invalid Expr in cmd_w\n");
 		assert(0);
