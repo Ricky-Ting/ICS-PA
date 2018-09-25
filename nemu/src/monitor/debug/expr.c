@@ -177,15 +177,15 @@ uint32_t eval(int p, int q)
 			return (uint32_t )(strtol(tokens[p].str,NULL,16));
 		if(tokens[p].type==TK_REG) {
 			for(int i=0;i<8;i++) 
-				if(strcmp(tokens[p].str,regsl[i]))
+				if(strcmp(tokens[p].str,regsl[i])==0)
 					return reg_l(i);
 			for(int i=0;i<8;i++)
-				if(strcmp(tokens[p].str,regsw[i]))	
+				if(strcmp(tokens[p].str,regsw[i])==0)	
 					return reg_w(i);
 			for(int i=0;i<8;i++)
-				if(strcmp(tokens[p].str,regsb[i]))
+				if(strcmp(tokens[p].str,regsb[i])==0)
 				return reg_b(i);
-			if(strcmp(tokens[p].str,"eip"))
+			if(strcmp(tokens[p].str,"eip")==0)
 				return cpu.eip;
 			printf("The letters should not be captitalized!\n");
 		}
