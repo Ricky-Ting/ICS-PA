@@ -84,7 +84,7 @@ bool testify(void) {
 		uint32_t newvalue=expr(tmp->e,&SUCCESS);
 		if(newvalue!=tmp->value) {
 			flag=false;
-			printf("Watchpoint%d:%s, with old value: %u, but new value: %u\n",tmp->NO,tmp->e,tmp->value,newvalue);
+			printf("Watchpoint%d:%s, with old value: %#x, but new value: %#x\n",tmp->NO,tmp->e,tmp->value,newvalue);
 			tmp->value=newvalue;
 		}
 		tmp=tmp->next;
