@@ -9,8 +9,10 @@ void ui_mainloop(int);
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
+
+/*
+
 	
-	/* My add */
 	FILE * fp=fopen("./tools/gen-expr/input","r");
 	if(fp==NULL) {
 		printf("File error\n");
@@ -38,7 +40,7 @@ int main(int argc, char *argv[]) {
 	}
 	fclose(fp);
 
-
+*/
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);

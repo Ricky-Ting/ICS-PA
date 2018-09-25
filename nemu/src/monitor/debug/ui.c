@@ -121,9 +121,7 @@ static int cmd_info(char *args) {
 		printf("eip \t %#x\n",cpu.eip);
 	}
 	else if(strcmp(arg,"w")==0) {    // info w
-		printf("Num\tExpr\tValue\n");
-
-
+		walk();
 	}
 	else
 		printf("Unkown command '%s'\n",arg);

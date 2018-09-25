@@ -52,3 +52,18 @@ void delete_wp(int num) {
 	printf("Watchpoint %d has been deleted\n",num);
 	return;
 }
+
+void walk(void) {
+	if(head==NULL) {
+		printf("No watchpoints\n");
+		return;
+	}
+	WP *tmp=head;
+	printf("Num\tExpr\tValue\n");
+	while(tmp!=NULL) {
+		printf("%d\t%s\t%u\n",tmp->NO,tmp->e,tmp->value);
+		tmp=tmp->next;
+	}
+	return;
+	
+}
