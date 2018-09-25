@@ -197,8 +197,8 @@ uint32_t eval(int p, int q)
 		return vaddr_read(eval(p+1,q),4);
 	} 
 	else {
-		int op=-1;
-		int pos=TK_UND;
+		int op=TK_UND;
+		int pos=-1;
 		int a=p; int b=q;
 		while(a<b)
 		{
