@@ -33,11 +33,18 @@ WP* new_wp(void) {
 
 void free_wp(WP *wp) {
 	WP* tmp=head;
+	if(wp==head) {
+		head=head->next;
+		wp->next=free_;
+		free_=wp;
+		return;
+	}
 	while(tmp->next!=wp)
 		tmp=tmp->next;
 	tmp->next=wp->next;
 	wp->next=free_;
 	free_=wp;
+	return;
 }
 
 void delete_wp(int num) {
