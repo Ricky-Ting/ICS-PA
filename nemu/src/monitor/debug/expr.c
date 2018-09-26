@@ -151,7 +151,6 @@ uint32_t expr(char *e, bool *success) {
 	}
 
  uint32_t ans= (uint32_t)(eval(0,nr_token-1));
-printf("In expr:%s=%#x\n",e,ans);
 return ans;
 
   return 0;
