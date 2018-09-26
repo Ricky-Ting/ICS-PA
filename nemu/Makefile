@@ -64,3 +64,8 @@ clean:
 	-rm -rf $(BUILD_DIR)
 	$(MAKE) -C tools/gen-expr clean
 	$(MAKE) -C tools/qemu-diff clean
+
+count:
+	@echo "current project"
+	find .| grep -E '\.c$$|\.h$$' | xargs cat | grep -v '^$$' | wc -l
+	
