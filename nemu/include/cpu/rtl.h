@@ -161,7 +161,10 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
-  TODO();
+  //TODO();
+ reg_l(4)-=4;
+ vaddr_write(reg_l(4),* src1,4);
+
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
