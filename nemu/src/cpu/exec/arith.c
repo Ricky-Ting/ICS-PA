@@ -7,8 +7,8 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  TODO();
-
+ // TODO();
+	rtl_sub(&reg_l(id_dest->reg),&id_src2->val,(uint32_t *)(&id_src->simm));
   print_asm_template2(sub);
 }
 
