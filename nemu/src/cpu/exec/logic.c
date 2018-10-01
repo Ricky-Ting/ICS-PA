@@ -14,7 +14,9 @@ make_EHelper(and) {
 }
 
 make_EHelper(xor) {
-  TODO();
+  //TODO();
+	rtl_xor(&reg_l(id_dest->reg),&reg_l(id_dest->reg),&reg_l(id_src->reg));
+//only register to register, need fixing
 
   print_asm_template2(xor);
 }
