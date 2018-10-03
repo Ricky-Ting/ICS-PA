@@ -8,7 +8,8 @@ make_EHelper(add) {
 
 make_EHelper(sub) {
  // TODO();
-	rtl_subi(&reg_l(id_dest->reg),&reg_l(id_dest->reg),(id_src->simm));
+	rtl_sub(&id_dest->val,&id_dest->val,&(id_src->val));
+	operand_write(id_dest,&id_dest->val);
   print_asm_template2(sub);
 }
 
