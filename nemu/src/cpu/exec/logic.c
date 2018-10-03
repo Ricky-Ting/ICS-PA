@@ -15,7 +15,8 @@ make_EHelper(and) {
 
 make_EHelper(xor) {
   //TODO();
-	rtl_xor(&reg_l(id_dest->reg),&reg_l(id_dest->reg),&reg_l(id_src->reg));
+	rtl_xor(&(id_dest->val),&(id_dest->val),&(id_src->val));
+	operand_write(id_dest,&id_dest->val);
 //only register to register, need fixing
 	//CF<-0, OF-<0
 
