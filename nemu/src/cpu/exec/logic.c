@@ -11,6 +11,10 @@ make_EHelper(and) {
   //TODO();
 	rtl_and(&id_dest->val,&id_dest->val,&id_src->val);
 	operand_write(id_dest,&id_dest->val);
+
+	uint32_t flag=0;
+	rtl_set_CF(&flag);
+	rtl_set_OF(&flag);
   print_asm_template2(and);
 }
 
