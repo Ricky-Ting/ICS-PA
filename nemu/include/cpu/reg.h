@@ -33,7 +33,24 @@ typedef struct {
 		};
  	};
   vaddr_t eip;
-	uint32_t eflags;
+/*	union{ */
+		rtlreg_t eflags;
+/*		struct{
+			bool CF : 1;
+			bool F1 : 1;
+			bool PF : 1;
+			bool F3 : 1;
+			bool AF : 1;
+			bool F5 : 1;
+			bool ZF : 1;
+			bool SF : 1;
+			bool TF : 1;
+			bool IF : 1;
+			bool DF : 1;
+			bool OF : 1;
+			uint32_t F12_31 : 20;
+		};	
+	} eflags; */
 } CPU_state;
 
 extern CPU_state cpu;
