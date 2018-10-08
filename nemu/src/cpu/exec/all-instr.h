@@ -20,3 +20,4 @@ make_EHelper(add);
 make_EHelper(cmp);
 
 make_EHelper(setcc); //Not yet
+make_EHelper(movzx);
