@@ -54,7 +54,25 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  TODO();
+  //TODO();
+	int32_t a=(int32_t) id_dest->val;
+	int32_t b=(int32_t) id_src->val;
+
+	rtl_sub(&id_dest->val,&id_dest->val,&id_src->val);
+	rtl_update_ZFSF(&id_dest->val,id_dest->width);
+
+	uint32_t value=0;
+	if(a<b)
+			value=1;
+	rtl_set_OF(&value);
+	uint32_t c=(uint32_t) a;
+	uint32_t d=(uint32_t) b;
+	value=0;
+	if(c<d)
+			value=1;
+	rtl_set_CF(&value);
+	
+
   print_asm_template2(cmp);
 }
 
