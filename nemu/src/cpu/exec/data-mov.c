@@ -32,7 +32,12 @@ make_EHelper(popa) {
 }
 
 make_EHelper(leave) {
-  TODO();
+  //TODO();
+	uint32_t Myebp;
+	rtl_lr(&Myebp,5,4);
+	rtl_sr(4,&Myebp,4);
+	rtl_pop(&Myebp);
+	rtl_sr(5,&Myebp,4);
 
   print_asm("leave");
 }
