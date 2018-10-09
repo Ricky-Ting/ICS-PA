@@ -211,7 +211,7 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
 	uint32_t value;
 	value=0;
 	uint32_t tmp;
-	for(int i=0;i<width;i++) {
+	for(int i=0;i<width*8-1;i++) {
 		tmp=((*result)>>i)&(0x1);
 		value=value|tmp;
 	}
