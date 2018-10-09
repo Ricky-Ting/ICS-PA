@@ -13,7 +13,7 @@ make_EHelper(test) {
 	rtl_set_CF(&flag);
 	rtl_set_OF(&flag);
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
-
+	printf("res=%#x\n",id_dest->val); //debug
 	printf("Eflag:%#x\n",cpu.eflags); //debug
 
   print_asm_template2(test);
