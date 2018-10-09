@@ -94,13 +94,17 @@ make_EHelper(inc) {
 
 make_EHelper(dec) {
   //TODO();
+	
 	id_dest->val=id_dest->val-1;
 	operand_write(id_dest,&id_dest->val);
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
-	uint32_t value=0;
-	if(id_dest->val==127)
-					value=1;
-	rtl_set_OF(&value);
+	uint32_t tmp=1;
+	for(int i=0;i<id_dest->width*8-1-1;i++) {
+		tmp=tmp & (((id_dest->val)>>i)&(0x1));				
+	}
+
+
+	rtl_set_OF(&tmp);
   print_asm_template1(dec);
 }
 
