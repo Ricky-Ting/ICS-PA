@@ -5,13 +5,13 @@ make_EHelper(add) {
 	int32_t a=(int32_t) id_dest->val;
 	int32_t b=(int32_t) id_src->val;
 
-	printf("eflags:%#x\n",cpu.eflags);
+//	printf("eflags:%#x\n",cpu.eflags);
 
 
 	rtl_add(&id_dest->val,&id_dest->val,&id_src->val);
 
 	int32_t ans= (int32_t) id_dest->val;
-	printf("%#x + %#x = %#x\n",a,b,ans);
+//	printf("%#x + %#x = %#x\n",a,b,ans);
 	operand_write(id_dest,&id_dest->val);
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
 
@@ -29,7 +29,7 @@ make_EHelper(add) {
 					value=1;
 	rtl_set_CF(&value);
 
-	printf("eflags:%#x\n\n",cpu.eflags);
+//	printf("eflags:%#x\n\n",cpu.eflags);
 
   print_asm_template2(add);
 
@@ -42,8 +42,8 @@ make_EHelper(sub) {
 	
 	rtl_sub(&id_dest->val,&id_dest->val,&(id_src->val));
 	operand_write(id_dest,&id_dest->val);
-	printf("eflags:%#x\n",cpu.eflags);
-	printf("%#x-%#x=%#x\n",a,b,id_dest->val);
+//	printf("eflags:%#x\n",cpu.eflags);
+//	printf("%#x-%#x=%#x\n",a,b,id_dest->val);
 
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
 
@@ -58,7 +58,7 @@ make_EHelper(sub) {
 			value=1;
 	rtl_set_CF(&value);
 	
-	printf("eflags:%#x\n\n",cpu.eflags);
+//	printf("eflags:%#x\n\n",cpu.eflags);
 
   print_asm_template2(sub);
 }
