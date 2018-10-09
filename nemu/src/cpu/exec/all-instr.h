@@ -26,3 +26,4 @@ make_EHelper(jcc); //Not yet
 make_EHelper(leave);
 make_EHelper(adc);
 make_EHelper(or);
+make_EHelper(sar);
