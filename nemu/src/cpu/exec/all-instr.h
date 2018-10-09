@@ -24,3 +24,4 @@ make_EHelper(movzx);
 make_EHelper(test);
 make_EHelper(jcc); //Not yet
 make_EHelper(leave);
+make_EHelper(adc);
