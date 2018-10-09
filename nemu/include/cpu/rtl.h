@@ -207,10 +207,12 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   //TODO();
 	uint32_t value;
-	if(*result) 
-		value=1;
-	else
-		value=0;
+	value=0;
+	uint32_t tmp;
+	for(int i=0;i<width;i++) {
+		tmp=((*result)>>i)&(0x1);
+		value=value|tmp;
+	}
 	rtl_set_ZF(&value);
 		
 }
