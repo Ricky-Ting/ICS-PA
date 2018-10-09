@@ -184,7 +184,8 @@ static inline void rtl_setrelopi(uint32_t relop, rtlreg_t *dest,
 
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
-  TODO();
+  //TODO();
+	*dest = ( (*src1)>>(width*8-1) ) & (0x1);
 }
 
 enum {CF=0,OF=11,ZF=6,SF=7};
@@ -226,7 +227,7 @@ static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
   //TODO();
 	uint32_t value;
-	value=( (*result) & (1<<(width*8-1))  ) ? 1:0;
+	value=( ((*result)>>(width*8-1)) & (0x1)  ) ? 1:0;
 	rtl_set_SF(&value);
 	
 }
