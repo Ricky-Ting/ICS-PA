@@ -213,6 +213,10 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
 		tmp=((*result)>>i)&(0x1);
 		value=value|tmp;
 	}
+	if(value==1)
+					value=0;
+	else
+					value=1;
 	rtl_set_ZF(&value);
 		
 }
