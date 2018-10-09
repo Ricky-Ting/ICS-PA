@@ -37,30 +37,6 @@ make_EHelper(add) {
 
 make_EHelper(sub) {
  // TODO();
- /*
-	int32_t a=(int32_t) id_dest->val;
-	int32_t b=(int32_t) id_src->val;
-	
-	rtl_sub(&id_dest->val,&id_dest->val,&(id_src->val));
-	operand_write(id_dest,&id_dest->val);
-//	printf("eflags:%#x\n",cpu.eflags);
-//	printf("%#x-%#x=%#x\n",a,b,id_dest->val);
-
-	rtl_update_ZFSF(&id_dest->val,id_dest->width);
-
-	uint32_t value=0;
-	if(a<b)
-			value=1;
-	rtl_set_OF(&value);
-	uint32_t c=(uint32_t)a;
-	uint32_t d=(uint32_t)b;
-	value=0;
-	if(c<d)
-			value=1;
-	rtl_set_CF(&value);
-	
-//	printf("eflags:%#x\n\n",cpu.eflags);
-*/
 	rtl_sub(&t2,&id_dest->val,&id_src->val);
 	rtl_setrelop(RELOP_LTU,&t0, &id_dest->val,&t2);
 	operand_write(id_dest,&t2);
@@ -74,29 +50,23 @@ make_EHelper(sub) {
 	rtl_msb(&t0,&t0,id_dest->width);
 	rtl_set_OF(&t0);
 
-
   print_asm_template2(sub);
 }
 
 make_EHelper(cmp) {
   //TODO();
-	int32_t a=(int32_t) id_dest->val;
-	int32_t b=(int32_t) id_src->val;
+	rtl_sub(&t2,&id_dest->val,&id_src->val);
+	rtl_setrelop(RELOP_LTU,&t0, &id_dest->val,&t2);
 
-	rtl_sub(&id_dest->val,&id_dest->val,&id_src->val);
-	rtl_update_ZFSF(&id_dest->val,id_dest->width);
-
-	uint32_t value=0;
-	if(a<b)
-			value=1;
-	rtl_set_OF(&value);
-	uint32_t c=(uint32_t) a;
-	uint32_t d=(uint32_t) b;
-	value=0;
-	if(c<d)
-			value=1;
-	rtl_set_CF(&value);
+	rtl_update_ZFSF(&t2, id_dest->width);
+	rtl_set_CF(&t0);
 	
+	rtl_xor(&t0,&id_dest->val,&id_src->val);
+	rtl_xor(&t1,&id_dest->val,&t2);
+	rtl_and(&t0,&t0,&t1);
+	rtl_msb(&t0,&t0,id_dest->width);
+	rtl_set_OF(&t0);
+
 
   print_asm_template2(cmp);
 }
@@ -119,17 +89,20 @@ make_EHelper(inc) {
 
 make_EHelper(dec) {
   //TODO();
+	rtl_subi(&t2,&id_dest->val,1);
+	rtl_setrelop(RELOP_LTU,&t0, &id_dest->val,&t2);
+	operand_write(id_dest,&t2);
+
+	rtl_update_ZFSF(&t2, id_dest->width);
 	
-	id_dest->val=id_dest->val-1;
-	operand_write(id_dest,&id_dest->val);
-	rtl_update_ZFSF(&id_dest->val,id_dest->width);
-	uint32_t tmp=1;
-	for(int i=0;i<id_dest->width*8-1-1;i++) {
-		tmp=tmp & (((id_dest->val)>>i)&(0x1));				
-	 }
+	rtl_xor(&t0,&id_dest->val,&id_src->val);
+	rtl_xor(&t1,&id_dest->val,&t2);
+	rtl_and(&t0,&t0,&t1);
+	rtl_msb(&t0,&t0,id_dest->width);
+	rtl_set_OF(&t0);
 
 
-	rtl_set_OF(&tmp);
+
   print_asm_template1(dec);
 }
 
