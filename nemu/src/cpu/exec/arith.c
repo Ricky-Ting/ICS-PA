@@ -77,14 +77,20 @@ make_EHelper(cmp) {
 }
 
 make_EHelper(inc) {
-  TODO();
+  //TODO();
 
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
-  TODO();
-
+  //TODO();
+	id_dest->val=id_dest->val-1;
+	operand_write(id_dest,&id_dest->val);
+	rtl_update_ZFSF(&id_dest->val,id_dest->width);
+	uint32_t value=0;
+	if(id_dest->val==127)
+					value=1;
+	rtl_set_OF(&value);
   print_asm_template1(dec);
 }
 
