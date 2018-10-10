@@ -119,6 +119,7 @@ static int cmd_info(char *args) {
 		for(int i=0;i<8;i++)                             
 			printf("%s \t %#x\n",regsl[i],reg_l(i));	 
 		printf("eip \t %#x\n",cpu.eip);
+		printf("eflags\t %#x\n",cpu.eflags);
 	}
 	else if(strcmp(arg,"w")==0) {    // info w
 		walk();
