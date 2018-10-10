@@ -39,3 +39,4 @@ make_EHelper(call_rm);
 make_EHelper(imul1);
 make_EHelper(jmp_rm);
 make_EHelper(cltd);
+make_EHelper(idiv);
