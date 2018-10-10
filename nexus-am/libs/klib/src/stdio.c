@@ -7,7 +7,7 @@
 #define false 0
 #define bool char
 
-void parse_int(int a, char* str);
+void parse_int(int a, char str[]);
 
 int printf(const char *fmt, ...) {
   return 0;
@@ -77,7 +77,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 
 						
 */
-						int a; char *str=NULL;
+						int a; char str[20]; str[0]='\0'; char *s;
 						switch(*fmt) {
 							case 'd':  
 								a=va_arg(ap,int);
@@ -87,9 +87,9 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 								fmt++;
 								break;
 							case 's': 
-								str=va_arg(ap,char *);
-								strcat(out,str);
-								out+=strlen(str);
+								s=va_arg(ap,char *);
+								strcat(out,s);
+								out+=strlen(s);
 								fmt++;
 								break;
 							default: return -1;  break;
@@ -100,7 +100,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 }
 
 		
-void parse_int(int a,char* str){
+void parse_int(int a,char str[]){
 				char b;
 				bool isneg=false; bool isnegmax=false;
 				char str2[20];
