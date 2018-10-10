@@ -2,7 +2,7 @@
 
 make_EHelper(add) {
   //TODO();
-	/*
+	
 	int32_t a=(int32_t) id_dest->val;
 	int32_t b=(int32_t) id_src->val;
 
@@ -28,7 +28,8 @@ make_EHelper(add) {
 	uint32_t uans=(uint32_t) ans;
 	if(uans<c || uans<d)
 					value=1;
-	rtl_set_CF(&value);*/
+	rtl_set_CF(&value);
+	/*
 	rtl_add(&t2, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t2);
 
@@ -43,7 +44,7 @@ make_EHelper(add) {
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-
+	*/
   print_asm_template2(add);
 
 }
@@ -86,7 +87,7 @@ make_EHelper(cmp) {
 
 make_EHelper(inc) {
   //TODO();
-/*	uint32_t a=id_dest->val;
+	uint32_t a=id_dest->val;
 	id_dest->val=id_dest->val+1;
 	operand_write(id_dest,&id_dest->val);
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
@@ -95,7 +96,8 @@ make_EHelper(inc) {
 		tmp=tmp&((a>>i)&(0x1));				
 	}
 	
-	rtl_set_OF(&tmp); */
+	rtl_set_OF(&tmp); 
+	/*
 
 	rtl_addi(&t2, &id_dest->val, 1);
   operand_write(id_dest, &t2);
@@ -111,7 +113,7 @@ make_EHelper(inc) {
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
-
+*/
 
   print_asm_template1(inc);
 }
