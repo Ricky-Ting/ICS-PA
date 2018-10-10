@@ -12,7 +12,9 @@ make_EHelper(test) {
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
 	printf("res=%#x\n",id_dest->val); //debug
 	printf("Eflag:%#x\n",cpu.eflags); //debug
-
+	uint32_t myZF;
+	rtl_get_ZF(&myZF);
+	printf("ZF=%u",myZF);
   print_asm_template2(test);
 }
 
