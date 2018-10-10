@@ -48,7 +48,8 @@ static inline make_DopHelper(SI) {
 		op->simm=(op->simm<<24)>>24;				
 					
 	}
-
+	printf("%d\n",op->simm);
+	
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
