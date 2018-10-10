@@ -150,6 +150,14 @@ make_DHelper(I2a) {
   decode_op_I(eip, id_src, true);
 }
 
+
+make_DHelper(SI2a) {  /*my add*/
+	 decode_op_a(eip, id_dest, true);
+  decode_op_SI(eip, id_src, true);
+				
+}
+
+
 /* Gv <- EvIb
  * Gv <- EvIv
  * use for imul */
