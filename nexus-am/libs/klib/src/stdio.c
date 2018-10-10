@@ -27,6 +27,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 						fmt++;
 					}
 					else {
+								fmt++;
 /*						myflags=length=width[0]=precision[0]='\0';
 						// get_flags  
 						while(*fmt==' ') {
@@ -76,7 +77,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 
 						
 */
-						int a; char *str;
+						int a; char *str=NULL;
 						switch(*fmt) {
 							case 'd':  
 								a=va_arg(ap,int);
