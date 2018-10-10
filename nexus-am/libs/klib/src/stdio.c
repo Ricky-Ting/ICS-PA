@@ -84,11 +84,13 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 								parse_int(a,str);
 								strcat(out,str);
 								out+=strlen(str);
+								fmt++;
 								break;
 							case 's': 
 								str=va_arg(ap,char *);
 								strcat(out,str);
 								out+=strlen(str);
+								fmt++;
 								break;
 							default: return -1;  break;
 						}
