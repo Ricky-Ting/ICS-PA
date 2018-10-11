@@ -190,7 +190,7 @@ void parse_str(int a,char str[]){
 
 void parse_int(char *str ,int * a) {
 	*a=0; int base=1;
-	for(int i=strlen(str)-1;i>=0;i--) {
+	for(size_t i=strlen(str)-1;i>=0;i--) {
 				(*a)+=( base *  (int)( (*(str+i)) - '0' )  );
 				base*=10;
 	}
