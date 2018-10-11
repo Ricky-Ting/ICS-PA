@@ -10,14 +10,14 @@
 void parse_int(int a, char str[]);
 
 int printf(const char *fmt, ...) { //maybe buggy
-  char* buf=NULL;
+  char buf[200];
 	va_list ap;
 	va_start(ap,fmt);
 	int a=vsprintf(buf,fmt,ap);
 	if(a<0)
 			return a;
-	for(;*buf!='\0';buf++) 
-			_putc(*buf);	
+	for(int i=0;buf[i]!='\0';i++) 
+			_putc(buf[i]);	
 	return a;
 
 	
