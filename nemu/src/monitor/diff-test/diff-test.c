@@ -4,6 +4,8 @@
 #include "monitor/monitor.h"
 #include "diff-test.h"
 
+
+
 static void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
 static void (*ref_difftest_getregs)(void *c);
 static void (*ref_difftest_setregs)(const void *c);
@@ -71,5 +73,24 @@ void difftest_step(uint32_t eip) {
 
   // TODO: Check the registers state with the reference design.
   // Set `nemu_state` to `NEMU_ABORT` if they are not the same.
-  TODO();
+  //TODO();
+	extern const char *regsl[];
+	uint32_t myregs[9];
+	ref_difftest_getregs(myregs);
+	for(int i=0;i<8;i++) { 
+		if(myregs[i]!=reg_l(i)) {
+					printf("wrong! %s should be %#x, but be %#x\n",regsl[i],myregs[i],reg_l(i));
+					nemu_state=NEMU_ABORT;
+			} 
+	}
+	if(myregs[8]!=cpu.eip) {
+					
+					printf("wrong! eip should be %#x, but be %#x\n",myregs[8],cpu.eip);
+					nemu_state=NEMU_ABORT;
+			}
+	
+
+
+
+
 }
