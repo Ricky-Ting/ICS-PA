@@ -1,4 +1,5 @@
 #include "cpu/exec.h"
+#include "device/port-io.h"
 
 void difftest_skip_ref();
 void difftest_skip_dut();
@@ -42,8 +43,14 @@ make_EHelper(iret) {
 }
 
 make_EHelper(in) {
-  TODO();
-
+  //TODO();
+	switch(id_dest->width) {
+		case 1: t0=pio_read_b(id_src->val); break;
+		case 2: t0=pio_read_w(id_src->val); break;
+		case 4: t0=pio_read_l(id_src->val); break;
+		default: assert(0);
+	}
+	rtl_sr(id_dest->reg,&t0,id_dest->width);
   print_asm_template2(in);
 
 #if defined(DIFF_TEST)
