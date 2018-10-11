@@ -59,8 +59,14 @@ make_EHelper(in) {
 }
 
 make_EHelper(out) {
-  TODO();
-
+  //TODO();
+		rtl_lr(&t0,id_src->reg,id_src->width);
+		switch(id_src->width) {
+			case 1: pio_write_b(id_dest->val,t0); break;
+			case 2: pio_write_w(id_dest->val,t0); break;
+			case 4: pio_write_l(id_dest->val,t0); break;
+			default: assert(0);
+		}
   print_asm_template2(out);
 
 #if defined(DIFF_TEST)
