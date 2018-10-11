@@ -14,6 +14,7 @@ int printf(const char *fmt, ...) {
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
+			memset(out,'\0',sizeof(out));
 				while(*fmt!='\0') {
 			/*		char myflags='\0';
 					char width[10];
