@@ -7,9 +7,9 @@
 #define false 0
 #define bool char
 
-void parse_int(int a, char str[]);
-
-int printf(const char *fmt, ...) { //maybe buggy
+void parse_str(int a, char str[]);
+void parse_int(char *str ,int * a);
+int printf(const char *fmt, ...) { /*maybe buggy */
   char buf[200];
 	va_list ap;
 	va_start(ap,fmt);
@@ -26,9 +26,9 @@ int printf(const char *fmt, ...) { //maybe buggy
 int vsprintf(char *out, const char *fmt, va_list ap) {
 				*out='\0';
 				while(*fmt!='\0') {
-			/*		char myflags='\0';
+					char myflags='\0';
 					char width[10];
-					char precision[10];
+		/*			char precision[10];
 					char length='\0';
 					char specifier='\0';
 */
@@ -39,8 +39,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 						*out='\0';
 					}
 					else {
-								fmt++;
-/*						myflags=length=width[0]=precision[0]='\0';
+			 					fmt++;
 						// get_flags  
 						while(*fmt==' ') {
 							myflags=' ';
@@ -65,7 +64,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 							fmt++;
 						}
 
-						// get_precision
+/*						// get_precision
 						if(*fmt=='.') {
 									while((*fmt)>='0' && (*fmt)<='9') {
 											char tmp[2]; tmp[0]=*fmt; tmp[1]='\0';
@@ -86,33 +85,70 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 							default: break;
 						}
 						
-
-						
 */
-						int a; char str[20]; str[0]='\0'; char *s;
-						switch(*fmt) {
-							case 'd':  
-								a=va_arg(ap,int);
-								parse_int(a,str);
+
+
+							if(*fmt== 'd'){
+								int a=va_arg(ap,int);
+								char str[20]; str[0]='\0';
+								parse_str(a,str);
+								int w=0;
+								
+								if(width[0]!='\0'){
+												if(width[0]!='*') {
+													parse_int(width,&w); 				
+												}
+								}
+								
+								if(myflags!='\0') {
+												if(myflags==' ') {
+														strcat(out," ");
+														out++;
+												}
+												else if(myflags=='+') {
+														if(a>0) {
+															strcat(out,"+");
+															out++;
+														}
+												}
+								
+								}
+
+								if(w>strlen(str)) {
+									char tmp[2]; tmp[1]='\0';
+									if(myflags=='0')
+													tmp[0]='0';
+									else
+													tmp[0]=' ';
+									for(int i=w;i>strlen(str);i--) {
+											strcat(out,tmp);
+											out++;
+									}
+
+								}
+
+
+								/*add +*/
 								strcat(out,str);
 								out+=strlen(str);
 								fmt++;
-								break;
-							case 's': 
-								s=va_arg(ap,char *);
+								continue;
+							}
+							if(*fmt== 's'){
+
+								char *s=va_arg(ap,char *);
 								strcat(out,s);
 								out+=strlen(s);
 								fmt++;
-								break;
-							default: return -1;  break;
-						}
+								continue;
+							}
 					}
 				}
   return strlen(out);
 }
 
 		
-void parse_int(int a,char str[]){
+void parse_str(int a,char str[]){
 				char b;
 				bool isneg=false; bool isnegmax=false;
 				char str2[20];
@@ -149,6 +185,16 @@ void parse_int(int a,char str[]){
 							str[j]=str2[i-j-1];
 				str[i]='\0';
 				return ;
+}
+
+
+void parse_int(char *str ,int * a) {
+	*a=0; int base=1;
+	for(int i=strlen(str)-1;i>=0;i--) {
+				(*a)+=( base *  (int)( (*(str+i)) - '0' )  );
+				base*=10;
+	}
+	return;
 }
 
 
