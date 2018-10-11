@@ -9,8 +9,18 @@
 
 void parse_int(int a, char str[]);
 
-int printf(const char *fmt, ...) {
-  return 0;
+int printf(const char *fmt, ...) { //maybe buggy
+  char* buf=NULL;
+	va_list ap;
+	va_start(ap,fmt);
+	int a=vsprintf(buf,fmt,ap);
+	if(a<0)
+			return a;
+	for(;*buf!='\0';buf++) 
+			_putc(*buf);	
+	return a;
+
+	
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
