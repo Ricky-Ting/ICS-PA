@@ -128,7 +128,7 @@ void parse_int(int a,char str[]){
 				}
 				if(isneg) {
 						if(isnegmax) {
-							str2[i-1]+=1;				
+							str2[0]+=1;				
 						}
 						str2[i]='-';
 						i++;
