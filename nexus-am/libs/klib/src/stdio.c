@@ -27,8 +27,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
 				*out='\0';
 				while(*fmt!='\0') {
 					char myflags='\0';
-					char width[10];
-		/*			char precision[10];
+					char width[10]; width[0]='\0';
+		/*			c har precision[10];
 					char length='\0';
 					char specifier='\0';
 */
@@ -189,10 +189,12 @@ void parse_str(int a,char str[]){
 
 
 void parse_int(char *str ,int * a) {
-	*a=0; int base=1;
-	for(size_t i=strlen(str)-1;i>=0;i--) {
-				(*a)+=( base *  (int)( (*(str+i)) - '0' )  );
-				base*=10;
+	*a=0; int base=1; int b[20]; int length=strlen(str);
+	for(int i=0;i<length;i++,str++) 
+					b[length-i-1]=(*str)-'0';
+	for(int i=0;i<length;i++) {
+		(*a)+=(base*b[i]);			
+		base*=10;				
 	}
 	return;
 }
