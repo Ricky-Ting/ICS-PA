@@ -9,7 +9,7 @@ size_t video_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
     case _DEVREG_VIDEO_INFO: {
       _VideoInfoReg *info = (_VideoInfoReg *)buf;
-			uint32_t sizetmp=inw(0x100);
+			uint32_t sizetmp=inl(0x100);
       info->width = (sizetmp>>16) & 0xffff;
       info->height = sizetmp & 0xffff;
 			printf("%d %d",info->width,info->height);
