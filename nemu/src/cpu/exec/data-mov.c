@@ -70,10 +70,26 @@ make_EHelper(cltd) {
 
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
-    TODO();
+   // TODO();
+		uint32_t myAX,myDX;
+		rtl_lr(&myAX,0,2);
+		if((myAX>>15)&0x1)
+				myDX=0xffff;
+		else
+				myDX=0;
+		rtl_sr(2,&myDX,2);
+
   }
   else {
-    TODO();
+   // TODO();
+		uint32_t myAX,myDX;
+		rtl_lr(&myAX,0,1);
+		if((myAX>>7)&0x1)
+				myDX=0xff;
+		else
+				myDX=0;
+		rtl_sr(2,&myDX,1);
+
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
