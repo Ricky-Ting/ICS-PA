@@ -12,6 +12,7 @@ size_t video_read(uintptr_t reg, void *buf, size_t size) {
 			uint32_t sizetmp=inl(0x100);
       info->width = (sizetmp>>16) & 0xffff;
       info->height = sizetmp & 0xffff;
+			printf("%d %d\n",info->width,info->height);
       return sizeof(_VideoInfoReg);
     }
   }
