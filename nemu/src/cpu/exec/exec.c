@@ -51,7 +51,7 @@ make_group(gp2,
 
   /* 0xf6, 0xf7 */
 make_group(gp3,
-    IDEXW(test_I,test,1), EMPTY, EX(not), EMPTY,
+    IDEXW(test_I,test,1), EMPTY, EX(not), EX(neg),
     EX(mul), EX(imul1), EX(div), EX(idiv))
 
   /* 0xfe */
@@ -200,7 +200,7 @@ opcode_entry opcode_table [512] = {
   /* 0xe8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xec */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf0 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xf4 */	EMPTY, EMPTY, IDEXW(E,neg,1), IDEX(E,neg),
+  /* 0xf4 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xfc */	EMPTY, EMPTY, EMPTY, EMPTY
 };
