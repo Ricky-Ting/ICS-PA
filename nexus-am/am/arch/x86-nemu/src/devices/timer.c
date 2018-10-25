@@ -2,7 +2,8 @@
 #include <x86.h>
 #include <amdev.h>
 
-_UptimeReg myoldtime={0,0};
+_UptimeReg myoldtime;
+_UptimeReg systemtime;
 
 size_t timer_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
@@ -11,8 +12,18 @@ size_t timer_read(uintptr_t reg, void *buf, size_t size) {
       uptime->lo = inl(0x48);
 			if(uptime->lo<myoldtime.lo)
 							myoldtime.hi++;
-			uptime->hi=myoldtime.hi;
 			myoldtime.lo=uptime->lo;
+			
+			if(uptime->lo>=systemtime.lo) {
+					uptime->lo=uptime->lo - systemtime.lo;
+					uptime->hi=myoldtime.hi;
+			}
+			else {
+					uptime->lo=0xffffffff-systemtime.lo+uptime->lo;
+					uptime->hi=myoldtime.hi-1;
+			}
+
+
       return sizeof(_UptimeReg);
     }
     case _DEVREG_TIMER_DATE: {
@@ -30,5 +41,8 @@ size_t timer_read(uintptr_t reg, void *buf, size_t size) {
 }
 
 void timer_init() {
-				
+	systemtime.lo=inl(0x48);
+	systemtime.hi=0;
+	myoldtime.lo=0;
+	myoldtime.hi=0;
 }
