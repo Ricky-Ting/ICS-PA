@@ -22,7 +22,7 @@ static inline void interpret_rtl_mv(rtlreg_t* dest, const rtlreg_t *src1) {
 }
 
 #define make_rtl_arith_logic(name) \
-  static inline void concat(interpret_rtl_, name) (rtlreg_t* dest, const rtlreg_t* src1, const rtlreg_t* src2) { \
+  static  void concat(interpret_rtl_, name) (rtlreg_t* dest, const rtlreg_t* src1, const rtlreg_t* src2) { \
     *dest = concat(c_, name) (*src1, *src2); \
   } \
   /* Actually those of imm version are pseudo rtl instructions,
@@ -49,7 +49,7 @@ make_rtl_arith_logic(div_r)
 make_rtl_arith_logic(idiv_q)
 make_rtl_arith_logic(idiv_r)
 
- inline  void interpret_rtl_div64_q(rtlreg_t* dest,
+static inline void interpret_rtl_div64_q(rtlreg_t* dest,
     const rtlreg_t* src1_hi, const rtlreg_t* src1_lo, const rtlreg_t* src2) {
   uint64_t dividend = ((uint64_t)(*src1_hi) << 32) | (*src1_lo);
   uint32_t divisor = (*src2);
