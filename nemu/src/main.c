@@ -1,8 +1,10 @@
+/*
 #include <stdio.h>
 #include <sys/types.h>
 #include "monitor/expr.h"
 #include <stdlib.h>
 #include <stdint.h>
+*/
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
 
