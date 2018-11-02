@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-volatile static int dummy;
 
 
 #ifdef DEBUG
