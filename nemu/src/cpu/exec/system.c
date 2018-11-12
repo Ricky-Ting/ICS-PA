@@ -9,15 +9,15 @@ void difftest_skip_dut();
 make_EHelper(lidt) {
   //TODO();
 	printf("%u\n",id_dest->addr);
-	rtl_lm(&t1,&id_dest->addr,4);
-	t0=id_dest->val+4;
-	rtl_lm(&t2,&t0,2);
+	rtl_lm(&t1,&id_dest->addr,2);
+	t0=id_dest->val+2;
+	rtl_lm(&t2,&t0,4);
 	if(id_dest->width==2) {
-		cpu.IDTR.low=t1&0xffffff;
-		cpu.IDTR.high=((t2&0xff)<<8)+ (t1>>24);
+		cpu.IDTR.low=t1;
+		cpu.IDTR.high=t2&0xffffff;
 	} else {
-		cpu.IDTR.low=(t1&0xffffff)+ ((t2&0xff00)<<16);
-		cpu.IDTR.high=((t2&0xff)<<8)+ (t1>>24);
+		cpu.IDTR.low=t1;
+		cpu.IDTR.high=t2;
 	}
 
   print_asm_template1(lidt);

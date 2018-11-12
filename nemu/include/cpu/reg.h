@@ -53,8 +53,8 @@ typedef struct {
 	} eflags; */
 	rtlreg_t CS;
 	struct {
-		uint32_t low;
-		uint16_t high;
+		uint16_t low;
+		uint32_t high;
 	} IDTR;
 } CPU_state;
 
