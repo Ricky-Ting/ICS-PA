@@ -21,7 +21,7 @@ make_EHelper(lidt) {
 		cpu.IDTR.low=t1&0xffff;
 		cpu.IDTR.high=t2;
 	}
-
+	printf("h%u\n",cpu.IDTR.high);
   print_asm_template1(lidt);
 }
 
