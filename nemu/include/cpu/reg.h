@@ -51,6 +51,7 @@ typedef struct {
 			uint32_t F12_31 : 20;
 		};	
 	} eflags; */
+	rtlreg_t CS;
 } CPU_state;
 
 extern CPU_state cpu;
