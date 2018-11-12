@@ -9,6 +9,7 @@ void difftest_skip_dut();
 make_EHelper(lidt) {
   //TODO();
 	printf("%u\n",id_dest->addr);
+	printf("%u\n",vaddr_read(id_dest->addr,4));
 	rtl_lm(&t1,&id_dest->addr,2);
 	t0=id_dest->val+2;
 	rtl_lm(&t2,&t0,4);
