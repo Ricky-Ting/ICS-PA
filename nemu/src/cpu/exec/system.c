@@ -16,8 +16,8 @@ make_EHelper(lidt) {
 		cpu.IDTR.low=t1&0xffffff;
 		cpu.IDTR.high=((t2&0xff)<<8)+ (t1>>24);
 	} else {
-		cpu.IDTR.low=t1;
-		cpu.IDTR.high=t2;
+		cpu.IDTR.low=(t1&0xffffff)+ ((t2&0xff00)<<16);
+		cpu.IDTR.high=((t2&0xff)<<8)+ (t1>>24);
 	}
 
   print_asm_template1(lidt);
