@@ -1,11 +1,23 @@
 #include "cpu/exec.h"
 #include "device/port-io.h" //myadd
 
+extern void raise_intr(uint8_t NO, vaddr_t ret_addr);
+
 void difftest_skip_ref();
 void difftest_skip_dut();
 
 make_EHelper(lidt) {
-  TODO();
+  //TODO();
+	rtl_lm(&t1,&id_dest->addr,4);
+	t0=id_dest->val+4;
+	rtl_lm(&t2,&t0,2);
+	if(id_dest->width==2) {
+		cpu.IDTR.low=t1&0xffffff;
+		cpu.IDTR.high=((t2&0xff)<<8)+ (t1>>24);
+	} else {
+		cpu.IDTR.low=t1;
+		cpu.IDTR.high=t2;
+	}
 
   print_asm_template1(lidt);
 }
@@ -27,8 +39,8 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  TODO();
-
+  //TODO();
+	raise_intr(id_dest->val&0xff,*eip);
   print_asm("int %s", id_dest->str);
 
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
