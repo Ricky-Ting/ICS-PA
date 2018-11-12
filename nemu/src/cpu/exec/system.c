@@ -8,9 +8,9 @@ void difftest_skip_dut();
 
 make_EHelper(lidt) {
   //TODO();
-	printf("%u\n",id_dest->addr);
-	printf("%u\n",vaddr_read(id_dest->addr+2,4));
-	printf("%u\n",vaddr_read(0x0012C020,4));
+//	printf("%u\n",id_dest->addr);
+//	printf("%u\n",vaddr_read(id_dest->addr+2,4));
+//	printf("%u\n",vaddr_read(0x0012C020,4));
 	rtl_lm(&t1,&id_dest->addr,2);
 	t0=id_dest->addr+2;
 	rtl_lm(&t2,&t0,4);
@@ -21,7 +21,7 @@ make_EHelper(lidt) {
 		cpu.IDTR.low=t1&0xffff;
 		cpu.IDTR.high=t2;
 	}
-	printf("h%u\n",cpu.IDTR.high);
+//	printf("h%u\n",cpu.IDTR.high);
   print_asm_template1(lidt);
 }
 
