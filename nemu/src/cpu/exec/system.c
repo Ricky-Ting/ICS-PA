@@ -13,10 +13,10 @@ make_EHelper(lidt) {
 	t0=id_dest->val+2;
 	rtl_lm(&t2,&t0,4);
 	if(id_dest->width==2) {
-		cpu.IDTR.low=t1;
+		cpu.IDTR.low=t1&0xffff;
 		cpu.IDTR.high=t2&0xffffff;
 	} else {
-		cpu.IDTR.low=t1;
+		cpu.IDTR.low=t1&0xffff;
 		cpu.IDTR.high=t2;
 	}
 
