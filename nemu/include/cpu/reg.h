@@ -21,7 +21,7 @@ typedef struct {
 			uint16_t _16;
 			uint8_t _8[2];
 	
-  		} gpr[8];
+  	 	} gpr[8];
 
   		/* Do NOT change the order of the GPRs' definitions. */
 
@@ -31,7 +31,7 @@ typedef struct {
  		struct {
   			rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
 		};
- 	};
+ 	}; 
   vaddr_t eip;
 /*	union{ */
 		rtlreg_t eflags;
@@ -52,7 +52,10 @@ typedef struct {
 		};	
 	} eflags; */
 	rtlreg_t CS;
-	rtlreg_t IDTR;
+	struct {
+		uint32_t low;
+		uint16_t high;
+	} IDTR;
 } CPU_state;
 
 extern CPU_state cpu;
