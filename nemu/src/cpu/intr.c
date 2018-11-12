@@ -10,6 +10,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 	rtl_push(&cpu.eflags);
 	rtl_push(&cpu.CS);
 	rtl_push(&ret_addr);
+	printf("%u",cpu.IDTR.low);
 	t1=vaddr_read(cpu.IDTR.low+NO*8,4); //low
 	t2=vaddr_read(cpu.IDTR.low+NO*8+4,4); //high
 	cpu.CS=t1&0xffff0000;
