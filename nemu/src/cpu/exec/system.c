@@ -10,6 +10,7 @@ make_EHelper(lidt) {
   //TODO();
 	printf("%u\n",id_dest->addr);
 	printf("%u\n",vaddr_read(id_dest->addr+2,4));
+	printf("%u\n",vaddr_read(0x0012C020,4));
 	rtl_lm(&t1,&id_dest->addr,2);
 	t0=id_dest->val+2;
 	rtl_lm(&t2,&t0,4);
