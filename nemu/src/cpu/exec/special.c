@@ -6,17 +6,23 @@ void interpret_rtl_exit(int state) {
 }
 
 make_EHelper(lidt) /*my add*/ {
-	uint64_t tmp;
-	rtl_lm(&tmp,&id_dest->addr,6);
-
+	rtl_lm(&t1,&id_dest->addr,4);
+	id_dest->val+=4;
+	rtl_lm(&t2,&id_dest->addr,2);
 	if(id_dest->width==2) {
-		cpu.IDTR.low=tmp&0xffffff;
-		cpu.IDTR.high=(tmp>>24)&0xffff;
+		cpu.IDTR.low=t1&0xffffff;
+		cpu.IDTR.high=(t2&0xff)<<8 + (t1)>>24;
 	}else {
-		cpu.IDTR.low=tmp&0xffffffff;
-		cpu.IDTR.high=(tmp>>32)&0xffff;
+		cpu.IDTR.low=t1;
+		cpu.IDTR.high=t2;
 	}
 
+}
+
+make_EHelper(int) {  /*my add*/
+	
+	raise_intr(id_dest->val&0xff,*eip);
+				
 }
 
 
