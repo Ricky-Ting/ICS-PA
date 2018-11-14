@@ -8,7 +8,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	uint8_t buf;
 	for(size_t  i=0;i<tmp;i++) {
 		ramdisk_read(&buf,i,1);
-		vaddr_write(0x4000000 +i,buf,1);
+		ramdisk_write(&buf,DEFAULT_ENTRY+i,1);
 	}
 
   return DEFAULT_ENTRY;
