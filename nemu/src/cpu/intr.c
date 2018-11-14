@@ -7,7 +7,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
    */
 
   //TODO();
-	printf("int %d\n",NO);
+	//printf("int %d\n",NO);
 	rtl_push(&cpu.eflags);
 	rtl_push(&cpu.CS);
 	rtl_push(&ret_addr);
