@@ -45,6 +45,7 @@ make_EHelper(int) {
   //TODO();
 	//printf("%u\n",id_dest->val);
 	raise_intr(id_dest->val&0xff,*eip);
+	printf("eip=%d\n",*eip);
   print_asm("int %s", id_dest->str);
 
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
