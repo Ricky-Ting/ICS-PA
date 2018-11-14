@@ -14,7 +14,8 @@ _Context* do_syscall(_Context *c) {
 												uint8_t tmp;
 												for(size_t i=0;i<a[3];i++) {
 													memcpy(&tmp,(void *)(a[2]),1);
-													_putc(tmp);
+													//_putc(tmp);
+													printf("%c",tmp);
 													_putc('a');
 													a[2]++;
 												}
