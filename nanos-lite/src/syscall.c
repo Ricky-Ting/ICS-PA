@@ -15,8 +15,7 @@ _Context* do_syscall(_Context *c) {
 												for(size_t i=0;i<a[3];i++) {
 													memcpy(&tmp,(void *)(a[2]),1);
 													//_putc(tmp);
-													printf("%c",tmp);
-													_putc('a');
+													printf("%c",(char)(tmp));
 													a[2]++;
 												}
 												c->GPRx=a[3];
