@@ -13,10 +13,9 @@ _Context* do_syscall(_Context *c) {
 								if(a[1]==1 || a[1]==2) {
 												uint8_t tmp;
 												for(size_t i=0;i<a[3];i++) {
-													memcpy(&tmp,(void *)(a[2]),1);
+													memcpy(&tmp,(void *)(a[2]+i),1);
 													//_putc(tmp);
 													printf("%d %d",(tmp),a[2]);
-													a[2]++;
 												}
 												c->GPRx=a[3];
 								}
