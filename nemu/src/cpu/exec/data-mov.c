@@ -67,7 +67,49 @@ make_EHelper(pusha) {
 }
 
 make_EHelper(popa) {
-  TODO();
+  //TODO();
+		if(id_dest->width==2) {
+		rtl_pop(&t0); //pop di 
+		rtl_sr(7,&t0,2); //di
+		rtl_pop(&t0); //pop si
+		rtl_sr(6,&t0,2); //si
+		rtl_pop(&t0); //pop bp
+		rtl_sr(5,&t0,2); //bp
+		rtl_pop(&t0); //pop sp
+		//rtl_sr(4,&t0,4,2); //sp
+		rtl_pop(&t0); //pop bx
+		rtl_sr(3,&t0,2); //bx
+		rtl_pop(&t0); //pop dx
+		rtl_sr(2,&t0,2); //dx
+		rtl_pop(&t0); //pop cx
+		rtl_sr(1,&t0,2); //cx
+		rtl_pop(&t0); //pop ax
+		rtl_sr(0,&t0,2); //ax
+
+
+
+	} else {
+		rtl_pop(&t0); //pop edi 
+		rtl_sr(7,&t0,4); //edi
+		rtl_pop(&t0); //pop esi
+		rtl_sr(6,&t0,4); //esi
+		rtl_pop(&t0); //pop ebp
+		rtl_sr(5,&t0,4); //ebp
+		rtl_pop(&t0); //pop esp
+		//rtl_sr(4,&t0,4,4); //esp
+		rtl_pop(&t0); //pop ebx
+		rtl_sr(3,&t0,4); //ebx
+		rtl_pop(&t0); //pop edx
+		rtl_sr(2,&t0,4); //edx
+		rtl_pop(&t0); //pop ecx
+		rtl_sr(1,&t0,4); //ecx
+		rtl_pop(&t0); //pop eax
+		rtl_sr(0,&t0,4); //eax
+
+
+			
+	}
+
 
   print_asm("popa");
 }
