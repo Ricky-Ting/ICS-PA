@@ -11,8 +11,8 @@ _Context* do_syscall(_Context *c) {
 		case SYS_yield: _yield(); c->GPRx=0; break;
 		case SYS_write: 
 								if(a[1]==1 || a[1]==2) {
-												uint8_t tmp;
 												for(size_t i=0;i<a[3];i++) {
+													char tmp;
 													memcpy(&tmp,(void *)(a[2]+i),1);
 													//_putc(tmp);
 													printf("%d %d",(tmp),a[2]);
