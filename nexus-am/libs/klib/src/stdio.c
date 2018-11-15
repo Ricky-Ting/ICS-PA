@@ -16,6 +16,7 @@ int printf(const char *fmt, ...) { /*maybe buggy */
 	int a=vsprintf(buf,fmt,ap);
 	if(a<0)
 			return a;
+	//_putc('i');
 	for(int i=0;buf[i]!='\0';i++) 
 			_putc(buf[i]);	
 	return a;

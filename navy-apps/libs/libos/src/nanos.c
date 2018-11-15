@@ -33,22 +33,22 @@ int _open(const char *path, int flags, mode_t mode) {
 }
 
 int _write(int fd, void *buf, size_t count){
-  _syscall_(SYS_write,fd,buf,count);
+  _syscall_(SYS_write,fd,(intptr_t)(buf),count);
   return 0;
 }
 
-intptr_t  oldaddr=&(_end);
+extern char end;
+intptr_t  oldaddr=&(end);
 
 void *_sbrk(intptr_t increment){
 	intptr_t newaddr=oldaddr+increment;
-	if(_syscall_(SYS_brk,newaddr,0,0)==0) {
+	 if(_syscall_(SYS_brk,newaddr,0,0)==0) {
 			intptr_t tmp=oldaddr;
 			oldaddr=newaddr;
-			_putc('i');
-			return tmp;
+			return (void *)tmp;
 	}
 	else {
-		return -1;				
+		return (void *)-1;				
 	}
 
   return (void *)-1;
