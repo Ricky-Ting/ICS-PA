@@ -21,6 +21,7 @@ _Context* do_syscall(_Context *c) {
 								else 
 											panic("SYS_write need to be implemented\n");
 								break;
+		case SYS_brk: c->GPRx=0; break;
 		case SYS_exit: /*printf("in\n");*/ _halt(c->GPR2); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
