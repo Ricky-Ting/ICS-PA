@@ -44,6 +44,7 @@ void *_sbrk(intptr_t increment){
 	if(_syscall_(SYS_brk,newaddr,0,0)==0) {
 			intptr_t tmp=oldaddr;
 			oldaddr=newaddr;
+			_putc('i');
 			return tmp;
 	}
 	else {
