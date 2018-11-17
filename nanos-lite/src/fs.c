@@ -53,8 +53,12 @@ size_t fs_filesz(int fd) {
 ssize_t fs_read(int fd,void *buf, size_t len) {
 	if(fd>=NR_FILES)
 					panic("In fs_read: Wrong fd");
-	if(file_table[fd].open_offset+len>file_table[fd].size)
-					panic("In fs_read: Too much request");
+	if(file_table[fd].open_offset+len>file_table[fd].size) {
+					len=file_table[fd].size-file_table[fd].open_offset;
+					ramdisk_read(buf,file_table[fd].open_offset+file_table[fd].disk_offset,len);
+					file_table[fd].open_offset=file_table[fd].size;
+					return len;
+	}
 	else {
 					if(fd==4)
 					printf("In fs_read, off:%d len:%d\n",file_table[fd].open_offset,len);
