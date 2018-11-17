@@ -1,5 +1,6 @@
 #include "common.h"
 #include "syscall.h"
+#include "fs.h"
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -19,9 +20,20 @@ _Context* do_syscall(_Context *c) {
 												c->GPRx=a[3];
 								}
 								else 
-											panic("SYS_write need to be implemented\n");
+												c->GPRx=fs_write(a[1],(void *)a[2],a[3]);
 								break;
-		case SYS_brk: c->GPRx=0;_putc('i');  break;
+		case SYS_read:
+								if(a[1]==0)
+												panic("syscall: stdin has not been implemented");
+								else
+												fs_read(a[1],(void *)a[2],a[3]);
+								break;
+		case SYS_close: c->GPRx=fs_close(a[1]); break;
+		case SYS_lseek: c->GPRx=fs_lseek(a[1],a[2],a[3]); break;
+
+		case SYS_brk: c->GPRx=0;  break;
+
+		
 		case SYS_exit: /*printf("in\n");*/ _halt(c->GPR2); break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

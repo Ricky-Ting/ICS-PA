@@ -1,16 +1,19 @@
 #include "proc.h"
+#include "fs.h"
 
 #define DEFAULT_ENTRY 0x4000000
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
-	size_t tmp=get_ramdisk_size();
+	int fd=fs_open(filename,0,0);
+
+	size_t tmp=fs_filesz(fd);
 	uint8_t buf;
 	for(size_t  i=0;i<tmp;i++) {
-		ramdisk_read(&buf,i,1);
+		fs_read(fd,&buf,1);
 		memset((void *)(DEFAULT_ENTRY+i),buf,1);
 	}
-
+	fs_close(fd);
   return DEFAULT_ENTRY;
 }
 
