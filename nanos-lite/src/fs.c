@@ -104,7 +104,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 							if(offset>0)
 											panic("fs_lseek: Should not reach here(SEEK_END)");
 							else{
-										printf("In seekend, offset=%d",offset);
+										printf("In seekend, offset=%d, return %d",offset,file_table[fd].size+offset);
 	
 
 											return file_table[fd].open_offset=file_table[fd].size+offset; 
