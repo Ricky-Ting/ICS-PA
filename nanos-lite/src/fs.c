@@ -91,7 +91,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 											return file_table[fd].open_offset=file_table[fd].open_offset+offset;
 							break;
 		case SEEK_END:
-							panic("fs_lseek: Should not reach here");
+							panic("fs_lseek: Should not reach here(SEEK_END)");
 							break;
 		default: panic("fs_lseek: Should not reach here");
 	}				
