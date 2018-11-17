@@ -91,7 +91,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 											return file_table[fd].open_offset=file_table[fd].open_offset+offset;
 							break;
 		case SEEK_END:
-							if(offset+file_table[fd].size>=file_table[fd].size)
+							if(offset>=0)
 											panic("fs_lseek: Should not reach here(SEEK_END)");
 							else
 											return file_table[fd].open_offset=file_table[fd].size+offset;
