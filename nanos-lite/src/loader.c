@@ -6,8 +6,9 @@
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
 	int fd=fs_open(filename,0,0);
-
+	printf("in loader.c fd=%d\n",fd);
 	size_t tmp=fs_filesz(fd);
+	printf("in loader.c size=%d\n",tmp);
 	uint8_t buf;
 	for(size_t  i=0;i<tmp;i++) {
 		fs_read(fd,&buf,1);
