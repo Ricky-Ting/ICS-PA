@@ -15,6 +15,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		memset((void *)(DEFAULT_ENTRY+i),buf,1);
 	}
 	fs_close(fd);
+	printf("in loadder.c out\n");
   return DEFAULT_ENTRY;
 }
 
