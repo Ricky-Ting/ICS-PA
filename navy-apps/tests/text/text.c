@@ -30,13 +30,13 @@ int main() {
     fscanf(fp, "%d", &n);
     assert(n == i + 1);
   }
-
+	printf("lllll\n");
   fseek(fp, 0, SEEK_SET);
   for (i = 0; i < 500; i ++) {
     fscanf(fp, "%d", &n);
     assert(n == i + 1 + 1000);
   }
-
+	printf("lllllll\n");
   fclose(fp);
 
   printf("PASS!!!\n");
