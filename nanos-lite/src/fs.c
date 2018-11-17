@@ -37,9 +37,9 @@ static Finfo file_table[] __attribute__((used)) = {
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
 
 int fs_open(const char *pathname, int flags, int mode) {
-	printf("fs_open: %s\n",pathname);
+	//printf("fs_open: %s\n",pathname);
 	for(int i=3;i<NR_FILES;i++)
-					if(strcmp(pathname,file_table[i].name)==0) {
+				 	if(strcmp(pathname,file_table[i].name)==0) {
 						file_table[i].open_offset=0;
 						return i;
 					}
@@ -58,13 +58,12 @@ ssize_t fs_read(int fd,void *buf, size_t len) {
 					ramdisk_read(buf,file_table[fd].open_offset+file_table[fd].disk_offset,len);
 					file_table[fd].open_offset=file_table[fd].size;
 					return len;
-	}
-	else {
-					if(fd==5)
-					printf("In fs_read, off:%d len:%d\n",file_table[fd].open_offset,len);
+	} 
+	else { 
+					//printf("In fs_read, off:%d len:%d\n",file_table[fd].open_offset,len);
 					
 					ramdisk_read(buf,file_table[fd].open_offset+file_table[fd].disk_offset,len);
-	if(fd==5)				printf("in fs_read, set=%d\n",file_table[fd].open_offset+file_table[fd].disk_offset);
+//			printf("in fs_read, set=%d\n",file_table[fd].open_offset+file_table[fd].disk_offset);
 					file_table[fd].open_offset+=len;
 					return len;
 	}
@@ -88,11 +87,11 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 	switch(whence) {
 		case SEEK_SET: 
 							if(offset>file_table[fd].size) {
-											printf("In fs_lseek: offset=%d, size=%d\n",offset, file_table[fd].size);
+										//	printf("In fs_lseek: offset=%d, size=%d\n",offset, file_table[fd].size);
 											panic("fs_lseek: out of the file");
 							}
 							else {
-											printf("In seekset, offset=%d",offset);
+										//	printf("In seekset, offset=%d",offset);
 											file_table[fd].open_offset=offset;
 											return file_table[fd].open_offset;
 							}
@@ -101,7 +100,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 							if(offset+file_table[fd].open_offset>file_table[fd].size)
 											panic("fs_lseek: out of the file");
 							else{
-											printf("In seekcur, offset=%d",offset);
+											//printf("In seekcur, offset=%d",offset);
 	
 											return file_table[fd].open_offset=file_table[fd].open_offset+offset;
 											
@@ -111,7 +110,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 							if(offset>0)
 											panic("fs_lseek: Should not reach here(SEEK_END)");
 							else{
-										printf("In seekend, offset=%d, return %d",offset,file_table[fd].size+offset);
+										//printf("In seekend, offset=%d, return %d",offset,file_table[fd].size+offset);
 	
 
 											return file_table[fd].open_offset=file_table[fd].size+offset; 
