@@ -2,6 +2,7 @@
 #include <assert.h>
 
 int main() {
+	printf("ii");
   FILE *fp = fopen("/share/texts/num", "r+");
   assert(fp);
 	printf("1in");
