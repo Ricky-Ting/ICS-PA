@@ -26,7 +26,7 @@ _Context* do_syscall(_Context *c) {
 								if(a[1]==0)
 												panic("syscall: stdin has not been implemented");
 								else
-												fs_read(a[1],(void *)a[2],a[3]);
+												c->GPRx=fs_read(a[1],(void *)a[2],a[3]);
 								break;
 		case SYS_close: c->GPRx=fs_close(a[1]); break;
 		case SYS_lseek: c->GPRx=fs_lseek(a[1],a[2],a[3]); break;
