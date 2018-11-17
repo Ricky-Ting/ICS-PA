@@ -5,7 +5,8 @@ int main() {
 	printf("head\n");
   FILE *fp = fopen("/share/texts/num", "r+");
 	printf("here\n");
-	printf("%d",(int)(fp));
+	if(fp==NULL)
+					printf("NULL\n");
   assert(fp);
 	printf("lin");
 
