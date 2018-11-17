@@ -2,7 +2,9 @@
 #include <assert.h>
 
 int main() {
+	printf("head\n");
   FILE *fp = fopen("/share/texts/num", "r+");
+	printf("here");
   assert(fp);
 	printf("lin");
 
