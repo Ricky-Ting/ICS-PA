@@ -87,7 +87,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 			panic("fs_lseek: Wrong fd!");
 	switch(whence) {
 		case SEEK_SET: 
-							if(offset>=file_table[fd].size) {
+							if(offset>file_table[fd].size) {
 											printf("In fs_lseek: offset=%d, size=%d\n",offset, file_table[fd].size);
 											panic("fs_lseek: out of the file");
 							}
@@ -98,7 +98,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 							}
 							break;
 		case SEEK_CUR:
-							if(offset+file_table[fd].open_offset>=file_table[fd].size)
+							if(offset+file_table[fd].open_offset>file_table[fd].size)
 											panic("fs_lseek: out of the file");
 							else{
 											printf("In seekcur, offset=%d",offset);
@@ -117,7 +117,7 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 											return file_table[fd].open_offset=file_table[fd].size+offset; 
 							}
 							break;
-		default: panic("fs_lseek: Should not reach here");
+		default: panic("fs_lseek: Should not reach here"); break;
 	}				
 }
 
