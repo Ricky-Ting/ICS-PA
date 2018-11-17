@@ -87,8 +87,10 @@ off_t fs_lseek(int fd, off_t offset, int whence) {
 			panic("fs_lseek: Wrong fd!");
 	switch(whence) {
 		case SEEK_SET: 
-							if(offset>=file_table[fd].size)
+							if(offset>=file_table[fd].size) {
+											printf("In fs_lseek: offset=%d, size=%d\n",offset, file_table[fd].size);
 											panic("fs_lseek: out of the file");
+							}
 							else {
 											printf("In seekset, offset=%d",offset);
 											file_table[fd].open_offset=offset;
