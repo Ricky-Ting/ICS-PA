@@ -56,7 +56,7 @@ ssize_t fs_read(int fd,void *buf, size_t len) {
 	if(file_table[fd].open_offset+len>file_table[fd].size)
 					panic("In fs_read: Too much request");
 	else {
-					printf("In fs_read, off:%d len:%d\n",file_table[fd],len);
+					printf("In fs_read, off:%d len:%d\n",file_table[fd].open_offset,len);
 					
 					ramdisk_read(buf,file_table[fd].open_offset+file_table[fd].disk_offset,len);
 					printf("in fs_read, set=%d\n",file_table[fd].open_offset+file_table[fd].disk_offset);
