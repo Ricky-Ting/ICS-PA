@@ -21,7 +21,7 @@ void hello_fun(void *arg) {
 
 void init_proc() {
 //			printf("in init_porc\n");
-			naive_uload(NULL,"/bin/hello");
+			naive_uload(NULL,"/bin/bmptest");
 }
 
 _Context* schedule(_Context *prev) {

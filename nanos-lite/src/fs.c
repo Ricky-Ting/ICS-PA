@@ -31,6 +31,8 @@ static Finfo file_table[] __attribute__((used)) = {
   {"stdin", 0, 0, invalid_read, invalid_write},
   {"stdout", 0, 0, invalid_read, serial_write},
   {"stderr", 0, 0, invalid_read, serial_write},
+	{"/dev/fb",0,0,invalid_read,fb_write},
+	{"/proc/dispinfo",0,0,dispinfo_read,invalid_write},
 #include "files.h"
 };
 
@@ -51,6 +53,11 @@ size_t fs_filesz(int fd) {
 }
 
 ssize_t fs_read(int fd,void *buf, size_t len) {
+	if(file_table[fd].read!=NULL) {
+					size_t tmp=file_table[fd].read(buf,file_table[fd].open_offset,len);
+					file_table[fd].open_offset+=len;
+					return tmp;
+	}
 	if(fd>=NR_FILES)
 					panic("In fs_read: Wrong fd");
 	if(file_table[fd].open_offset+len>file_table[fd].size) {
@@ -70,8 +77,12 @@ ssize_t fs_read(int fd,void *buf, size_t len) {
 }
 
 ssize_t fs_write(int fd, const void * buf, size_t len) {
-	if(file_table[fd].write!=NULL)
-					return file_table[fd].write((void *)buf,0,len);
+	if(file_table[fd].write!=NULL) {
+					size_t tmp=file_table[fd].write(buf,file_table[fd].open_offset,len);
+					file_table[fd].open_offset+=len;
+					return tmp;
+					
+	}
 	if(fd>=NR_FILES)
 					panic("In fs_write: Wrong fd");
 	if(file_table[fd].open_offset+len>file_table[fd].size)
@@ -135,4 +146,10 @@ int fs_close(int fd) {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+	int i;
+	for(i=0;i<NR_FILES;i++) {
+		if(strcmp(file_table[i].name,"/dev/fb")==0)
+						break;
+	}
+	file_table[i].size=screen_width()*screen_height()*4;
 }
