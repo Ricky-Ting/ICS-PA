@@ -70,8 +70,8 @@ ssize_t fs_read(int fd,void *buf, size_t len) {
 }
 
 ssize_t fs_write(int fd, const void * buf, size_t len) {
-	if(file_table[fd].read!=NULL)
-					return file_table[fd].read((void *)buf,0,len);
+	if(file_table[fd].write!=NULL)
+					return file_table[fd].write((void *)buf,0,len);
 	if(fd>=NR_FILES)
 					panic("In fs_write: Wrong fd");
 	if(file_table[fd].open_offset+len>file_table[fd].size)
