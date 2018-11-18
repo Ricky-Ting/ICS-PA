@@ -38,9 +38,10 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	else {
 			sprintf(tmp,"t %d\n",uptime());			
 	}
-	printf("%s\n",tmp);
+	printf("%s",tmp);
 	tmp[len-1]='\0';
 	len=strlen(tmp);
+	printf("len=%d\n",len);
 	memcpy(buf,tmp,len);
 	return len;
 }
