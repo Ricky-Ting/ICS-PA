@@ -21,7 +21,7 @@ static const char *keyname[256] __attribute__((used)) = {
 size_t events_read(void *buf, size_t offset, size_t len) {
   //need complete
 	char tmp[200];
-	printf("In events_read: in\n");
+	printf("In events_read: ");
 	int key=read_key();
 	bool down=false;
 	if(key!=_KEY_NONE) {
@@ -38,6 +38,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	else {
 			sprintf(tmp,"t %d\n",uptime());			
 	}
+	printf("%s\n",tmp);
 	tmp[len-1]='\0';
 	len=strlen(tmp);
 	memcpy(buf,tmp,len);
