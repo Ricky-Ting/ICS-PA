@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 int main() {
+	printf("hihi\n");
   FILE *fp = fopen("/dev/events", "r");
 	printf("hi\n");
   volatile int j = 0;
