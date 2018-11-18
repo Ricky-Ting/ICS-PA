@@ -21,7 +21,7 @@ static const char *keyname[256] __attribute__((used)) = {
 size_t events_read(void *buf, size_t offset, size_t len) {
   //need complete
 	char tmp[200];
-	printf("In events_read: ");
+	//printf("In events_read: ");
 	int key=read_key();
 	bool down=false;
 	if(key!=_KEY_NONE) {
@@ -38,14 +38,14 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	else {
 			sprintf(tmp,"t %d\n",uptime());			
 	}
-	printf("%s original len=%d",tmp,len);
+	//printf("%s original len=%d",tmp,len);
 	tmp[len-1]='\0';
 	len=strlen(tmp);
-	printf("len=%d\n",len);
+	//printf("len=%d\n",len);
 	memcpy(buf,(void *)tmp,len);
 	char newhead[200];
-	memcpy(newhead,buf,len);
-	printf("tmp =  %s",newhead);
+	memcpy(newhead,buf,len+1);
+	//printf("tmp =  %s",newhead);
 	return len;
 }
 
@@ -63,12 +63,12 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 size_t fb_write(const void *buf, size_t offset, size_t len) {
   int x,y;
 	uint32_t pixel;
-	
-
 	for(size_t i=0;i<len;i+=4) {
 			memcpy(&pixel,buf+i,4);
-			y=offset/screen_width();
-			x=offset%screen_width();
+			y=(offset/4)/screen_width();
+			x=(offset/4)%screen_width();
+			if(y>=screen_height())
+					return i;
 			draw_rect(&pixel,x,y,1,1);
 			//printf("in fb_write y=%d\n",y);
 	}
