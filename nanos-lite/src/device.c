@@ -28,7 +28,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 	if(len>128)
 					len=128;
 
-	printf("In dispinfo_read: offset=%d, len=%d\n",offset,len);
+	//printf("In dispinfo_read: offset=%d, len=%d\n",offset,len);
 	memcpy(buf,((void *)dispinfo)+offset,len);		
 	return len;
 }
@@ -41,7 +41,7 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
 			y=offset/screen_width();
 			x=offset%screen_width();
 			draw_rect(&pixel,x,y,1,1);
-			printf("in");
+			printf("in fb_write\n");
 	}
 	return len;
 }
