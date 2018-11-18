@@ -2,6 +2,7 @@
 
 int main() {
   FILE *fp = fopen("/dev/events", "r");
+	printf("hi\n");
   volatile int j = 0;
   while(1) {
     j ++;
