@@ -42,7 +42,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	tmp[len-1]='\0';
 	len=strlen(tmp);
 	printf("len=%d\n",len);
-	memcpy(buf,&tmp,len);
+	memcpy(buf,(void *)tmp,len);
 	return len;
 }
 
