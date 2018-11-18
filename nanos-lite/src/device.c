@@ -6,7 +6,7 @@ size_t serial_write(const void *buf, size_t offset, size_t len) {
 		char tmp;
 		memcpy(&tmp,(void *)(buf+i),1);
 		_putc(tmp);
-		printf("In serial_write\n");
+		//printf("In serial_write\n");
 	}
 	return len;
 }
