@@ -55,7 +55,7 @@ size_t fs_filesz(int fd) {
 ssize_t fs_read(int fd,void *buf, size_t len) {
 	if(file_table[fd].read!=NULL) {
 					size_t tmp=file_table[fd].read(buf,file_table[fd].open_offset,len);
-					file_table[fd].open_offset+=len;
+					file_table[fd].open_offset+=tmp;
 					return tmp;
 	}
 	if(fd>=NR_FILES)
@@ -79,7 +79,7 @@ ssize_t fs_read(int fd,void *buf, size_t len) {
 ssize_t fs_write(int fd, const void * buf, size_t len) {
 	if(file_table[fd].write!=NULL) {
 					size_t tmp=file_table[fd].write(buf,file_table[fd].open_offset,len);
-					file_table[fd].open_offset+=len;
+					file_table[fd].open_offset+=tmp;
 					return tmp;
 					
 	}
