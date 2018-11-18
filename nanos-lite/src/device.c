@@ -20,9 +20,26 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) {
   //need complete
-
-	//if(read_key==)
-	return 0;
+	char tmp[200];
+	int key=read_key();
+	bool down=false;
+	if(key!=_KEY_NONE) {
+		if(key & 0x8000) {
+			key^=0x8000;
+			down=true;
+		}			
+		if(down) {
+			sprintf(tmp,"kd %s\n",keyname[key]);				
+		} 
+		else
+			sprintf(tmp,"ku %s\n",keyname[key]);
+	}
+	else {
+			sprintf(tmp,"t %d\n",uptime());			
+	}
+	tmp[len]='\0';
+	sprintf(buf,tmp);
+	return strlen(tmp);
 }
 
 static char dispinfo[128] __attribute__((used));
@@ -46,7 +63,7 @@ size_t fb_write(const void *buf, size_t offset, size_t len) {
 			y=offset/screen_width();
 			x=offset%screen_width();
 			draw_rect(&pixel,x,y,1,1);
-			printf("in fb_write y=%d\n",y);
+			//printf("in fb_write y=%d\n",y);
 	}
 	return len;
 }
