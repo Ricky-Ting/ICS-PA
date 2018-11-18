@@ -38,9 +38,10 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	else {
 			sprintf(tmp,"t %d\n",uptime());			
 	}
-	tmp[len]='\0';
-	sprintf(buf,tmp);
-	return strlen(tmp);
+	tmp[len-1]='\0';
+	len=strlen(tmp);
+	memcpy(buf,tmp,len);
+	return len;
 }
 
 static char dispinfo[128] __attribute__((used));
