@@ -3,9 +3,7 @@
 
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   for(size_t i=0;i<len;i++) {
-		char tmp;
-		memcpy(&tmp,(void *)(buf+i),1);
-		_putc(tmp);
+		_putc(((char *)buf)[i]);
 		//printf("In serial_write\n");
 	}
 	return len;
@@ -21,7 +19,7 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) {
   //need complete
-	char tmp[200];
+
 	//printf("In events_read: ");
 	int key=read_key();
 	bool down=false;
@@ -31,23 +29,20 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 			down=true;
 		}			
 		if(down) {
-			sprintf(tmp,"kd %s\n",keyname[key]);				
+			sprintf(buf,"kd %s\n",keyname[key]);				
 		} 
 		else
-			sprintf(tmp,"ku %s\n",keyname[key]);
+			sprintf(buf,"ku %s\n",keyname[key]);
 	}
 	else {
-			sprintf(tmp,"t %d\n",uptime());			
+			sprintf(buf,"t %d\n",uptime());			
 	}
 	//printf("%s original len=%d",tmp,len);
-	tmp[len-1]='\0';
-	len=strlen(tmp);
+	
+	((char *)buf)[len]='\0';
 	//printf("len=%d\n",len);
-	memcpy(buf,(void *)tmp,len+5);
-	char newhead[200];
-	memcpy(newhead,buf,len+1);
-	//printf("tmp =  %s",newhead);
-	return len;
+	
+	return strlen(buf);
 }
 
 static char dispinfo[128] __attribute__((used));
@@ -56,9 +51,10 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len) {
 	if(len+offset>128)
 					len=128-offset;
 
-	printf("In dispinfo_read: offset=%d, len=%d\n",offset,len);
-	memcpy(buf,((void *)dispinfo)+offset,len);		
-	return len;
+	//printf("In dispinfo_read: offset=%d, len=%d\n",offset,len);
+	memcpy(buf,((void *)dispinfo)+offset,len);
+     ((char*)buf)[len] = '\0';
+	return strlen(buf);
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {

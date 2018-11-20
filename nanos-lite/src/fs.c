@@ -1,5 +1,6 @@
 #include "fs.h"
 #include "proc.h"
+#include "common.h"
 
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
