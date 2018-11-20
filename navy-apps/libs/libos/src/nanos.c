@@ -42,7 +42,9 @@ intptr_t oldaddr=&(end);
 void *_sbrk(intptr_t increment){
 	intptr_t newaddr=oldaddr+increment;
 	 if(_syscall_(SYS_brk,newaddr,0,0)==0) {
-			return (void *)oldaddr;
+			intptr_t tmp=oldaddr;
+			oldaddr=newaddr;
+			return (void *)tmp;
 	}
 	else {
 		return (void *)-1;				
