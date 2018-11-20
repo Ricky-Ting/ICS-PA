@@ -1,13 +1,11 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
-
 #include "common.h"
 #include <stdio.h>
 #include <assert.h>
 
-//The code added latter
-volatile static int dummy;
+
 
 #ifdef DEBUG
 extern FILE* log_fp;

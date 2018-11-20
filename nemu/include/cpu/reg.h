@@ -14,44 +14,48 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  * For more details about the register encoding scheme, see i386 manual.
  */
 
-typedef union {
-  union {
-    uint32_t _32;
-    uint16_t _16;
-    uint8_t _8[2];
-  } gpr[8];
+typedef struct {
+	union{
+  		union {
+    		uint32_t _32;
+			uint16_t _16;
+			uint8_t _8[2];
+	
+  	 	} gpr[8];
 
-  /* Do NOT change the order of the GPRs' definitions. */
+  		/* Do NOT change the order of the GPRs' definitions. */
 
-  /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
-   * in PA2 able to directly access these registers.
-   */
-  struct{
-  rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
-  /*
-  union{
-    rtlreg_t EFLAGS;
-    union{
-      bool CF;  bool one1 = 1;  bool PF;  bool zero1 = false;
-      bool AF;  bool zero2 = 0; bool ZF;  bool SF;
-      bool TF;  bool IF;        bool DF;  bool OF;
-      bool OL;      
-    }
-  }
-  */
+  		/* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
+   		* in PA2 able to directly access these registers.
+  		 */
+ 		struct {
+  			rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
+		};
+ 	}; 
   vaddr_t eip;
-  rtlreg_t EFLAGS;
-
-  uint32_t CS;
-  struct {
-    uint16_t L;
-    uint32_t B;
-  } IDTR;
-  /*
-  uint32_t IDTB;
-  uint16_t IDTL;
-  */
-  };
+/*	union{ */
+		rtlreg_t eflags;
+/*		struct{
+			bool CF : 1;
+			bool F1 : 1;
+			bool PF : 1;
+			bool F3 : 1;
+			bool AF : 1;
+			bool F5 : 1;
+			bool ZF : 1;
+			bool SF : 1;
+			bool TF : 1;
+			bool IF : 1;
+			bool DF : 1;
+			bool OF : 1;
+			uint32_t F12_31 : 20;
+		};	
+	} eflags; */
+	rtlreg_t CS;
+	struct {
+		uint16_t low;
+		uint32_t high;
+	} IDTR;
 } CPU_state;
 
 extern CPU_state cpu;
@@ -79,19 +83,4 @@ static inline const char* reg_name(int index, int width) {
   }
 }
 
-static inline bool cpu_CF(){
-  return (cpu.EFLAGS & 1) != 0;
-}
-static inline bool cpu_ZF(){
-  return (cpu.EFLAGS & (1<<6)) != 0;
-}
-static inline bool cpu_SF(){
-  return (cpu.EFLAGS & (1<<7)) != 0;
-}
-static inline bool cpu_IF(){
-  return (cpu.EFLAGS & (1<<9)) != 0;
-}
-static inline bool cpu_OF(){
-  return (cpu.EFLAGS & (1<<11)) != 0;
-}
 #endif

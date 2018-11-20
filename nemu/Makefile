@@ -31,7 +31,8 @@ $(OBJ_DIR)/%.o: src/%.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(SO_CFLAGS) -c -o $@ $<
-  
+
+
 # Depencies
 -include $(OBJS:.o=.d)
 
@@ -63,3 +64,8 @@ clean:
 	-rm -rf $(BUILD_DIR)
 	$(MAKE) -C tools/gen-expr clean
 	$(MAKE) -C tools/qemu-diff clean
+
+count:
+	@echo "current project"
+	find .| grep -E '\.c$$|\.h$$' | xargs cat | grep -v '^$$' | wc -l
+	

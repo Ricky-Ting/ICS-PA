@@ -1,13 +1,10 @@
 #include "monitor/watchpoint.h"
 #include "monitor/expr.h"
-#include <string.h>
 
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
 static WP *head, *free_;
-
-char watchpoint_list[1<<16];
 
 void init_wp_pool() {
   int i;
@@ -23,142 +20,75 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
-WP* new_wp(char *expression){
-	if(free_ == NULL){
-		Log("Error: The number of watchpoint is out of the upper limit.");
+WP* new_wp(void) {
+	if(free_==NULL)
+		assert(0);
+	WP *tmp = free_;
+	free_=free_->next;
+	
+	tmp->next=head;
+	head=tmp;
+	return tmp;
+}
+
+void free_wp(WP *wp) {
+	WP* tmp=head;
+	if(wp==head) {
+		head=head->next;
+		wp->next=free_;
+		free_=wp;
+		return;
+	}
+	while(tmp->next!=wp)
+		tmp=tmp->next;
+	tmp->next=wp->next;
+	wp->next=free_;
+	free_=wp;
+	return;
+}
+
+void delete_wp(int num) {
+	WP *tmp=head;
+	while(tmp!=NULL && tmp->NO!=num)
+		tmp=tmp->next;
+	if(tmp==NULL) {
+		printf("Watchpoint %d doesn't exisit\n",num);
 		assert(0);
 	}
-
-	int Value = 0;
-	bool success = true;
-	Value = expr(expression, &success);
-	if(!success){
-		printf("表达式非法，创建监视点失败\n");
-		return NULL;
-	}
-	
-	if(head == NULL){
-		head = free_;
-		free_ = free_->next;
-		head->next = NULL;
-		head->NO = 1;
-		head->expression[0] = '\0';
-		strcpy(head->expression, expression);
-		head->value = Value;
-		return head;
-	}
-
-	WP* Pointer = head;
-	while(Pointer->next != NULL)
-		Pointer = Pointer->next;
-
-	Pointer->next = free_;
-	free_ = free_->next;
-	Pointer->next->next = NULL;
-	Pointer->next->NO = Pointer->NO + 1;
-	Pointer->next->expression[0] = '\0';
-	strcpy(Pointer->next->expression, expression);
-	Pointer->value = Value;
-	return Pointer->next;
+	free_wp(tmp);
+	printf("Watchpoint %d has been deleted\n",num);
+	return;
 }
 
-void free_wp(WP *pre_wp, WP *wp){
-	if(pre_wp == NULL){
-		WP *term;
-		term = head;
-		head = head->next;
-		term->next = free_;
-		free_ = term; 
+void walk(void) {
+	if(head==NULL) {
+		printf("No watchpoints\n");
 		return;
 	}
-	else if(wp->next == NULL){
-		pre_wp->next = NULL;
-		wp->next = free_;
-		free_ = wp;
-		return;
+	WP *tmp=head;
+	printf("Num\tExpr\tValue\n");
+	while(tmp!=NULL) {
+		printf("%d\t%s\t%#x\n",tmp->NO,tmp->e,tmp->value);
+		tmp=tmp->next;
 	}
-	else{
-		pre_wp->next = wp->next;
-		wp->next = free_;
-		free_ = wp;
-		return;
-	}
-	/*
-	WP* Pointer = wp->next;
-	while(Pointer != NULL){
-		Pointer->No--;
-		Pointer = Pointer->next;
-	}
-	if(wp->next == NULL){
-		
-	}
-	WP term1 = *wp;
-	WP* term2 = wp->next;
-	*wp = *(wp->next);
-	*term2 = term1;
-	term2->next = free_;
-	free_ = term2;
-	*/
+	return;	
 }
 
-char* show_watchpoint(int order){
-	watchpoint_list[0] = '\0';
-	if(order == 0){
-		WP* Pointer = head;
-		char term[1024];
-		term[0] = '\0';
-		while(Pointer != NULL){
-			sprintf(term, "序号:%d\t表达式:%s\t值:%d\n", Pointer->NO, Pointer->expression, Pointer->value);
-			strcat(watchpoint_list, term);
-			Pointer = Pointer->next;
-		}
-	}
-	else{
-		WP* Pointer = head;
-		char term[1024];
-		term[0] = '\0';
-		while(Pointer != NULL){
-			if(Pointer->NO == order)
-				continue;
-			sprintf(term, "序号:%d\t表达式:%s\n", Pointer->NO, Pointer->expression);
-			strcat(watchpoint_list, term);
-			break;
-		}
-	}
-	return watchpoint_list;
-}
-
-bool delete_watchpoint(int order){
-	WP* Pointer = head;
-	WP* pre_P = NULL;
-	while(Pointer != NULL){
-		if(Pointer->NO != order){
-			pre_P = Pointer;
-			Pointer = Pointer->next;
-			continue;
-		}
-		free_wp(pre_P, Pointer);
+bool testify(void) {
+	WP *tmp=head;
+	bool flag = true;
+	if(tmp==NULL)
 		return true;
+	while(tmp!=NULL) {
+		bool SUCCESS;
+		uint32_t newvalue=expr(tmp->e,&SUCCESS);
+		if(newvalue!=tmp->value) {
+			flag=false;
+			printf("Watchpoint%d:%s, with old value: %#x, but new value: %#x\n",tmp->NO,tmp->e,tmp->value,newvalue);
+			tmp->value=newvalue;
+		}
+		tmp=tmp->next;
 	}
-	return false;
-}
+	return flag;
 
-bool is_change(){
-	WP *Pointer = head;
-	bool success = true;
-	int Value = 0;
-	bool no_change = true;
-	while(Pointer != NULL){
-		Value = expr(Pointer->expression, &success);
-		if(Value == Pointer->value && success){
-		}
-		else{
-			printf("检查点%d改变，原值：%d\t现值：%d\n",Pointer->NO, Pointer->value, Value);
-			Pointer->value = Value;
-			no_change = false;
-		}
-		Pointer = Pointer->next;
-		continue;
-	}
-	return no_change;
 }

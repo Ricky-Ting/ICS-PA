@@ -34,10 +34,8 @@ static inline void welcome() {
 #endif
 
   Log("Build time: %s, %s", __TIME__, __DATE__);
-  //printf("Welcome to NEMU!\n");
-	printf("欢迎来到新日暮里!\n");
-  //printf("For help, type \"help\"\n");
-	printf("获得更多的帮♂助,请输入\"help\"\n");
+  printf("Welcome to NEMU!\n");
+  printf("For help, type \"help\"\n");
 }
 
 static inline int load_default_img() {
@@ -88,8 +86,8 @@ static inline long load_img() {
 static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
-  cpu.CS = 8;
-  cpu.EFLAGS = 0x2;
+	cpu.CS=8;
+	cpu.eflags=2;
 }
 
 static inline void parse_args(int argc, char *argv[]) {
@@ -141,6 +139,5 @@ int init_monitor(int argc, char *argv[]) {
   /* Display welcome message. */
   welcome();
 
-  Log("is_batch_mode:%d\n", is_batch_mode);
   return is_batch_mode;
 }

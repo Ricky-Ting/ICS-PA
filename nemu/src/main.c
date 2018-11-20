@@ -1,11 +1,10 @@
-//#define CHECK
-
-#ifdef CHECK
-#include<stdio.h>
-#include"monitor/expr.h"
-#include"nemu.h"
-#endif
-
+/*
+#include <stdio.h>
+#include <sys/types.h>
+#include "monitor/expr.h"
+#include <stdlib.h>
+#include <stdint.h>
+*/
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
 
@@ -13,50 +12,37 @@ int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
 
-	#ifdef CHECK
-	FILE *input = fopen("/home/tuomianzigan/ics2018/nemu/tools/gen-expr/input", "r");
-	/*
-	while(!feof(input)){
-		char input_term = '\0';
-		fscanf(input, "%c", input_term);
-		printflog("%c", input_term);
+
+/*
+	
+	FILE * fp=fopen("./tools/gen-expr/input","r");
+	if(fp==NULL) {
+		printf("File error\n");
+		exit(1);
 	}
-	*/
-	///*
-	if(input){
-		uint32_t result = 0;
-		uint32_t expr_result = 0;
-		char expression[65536];
-		bool success = true;
-		while(!feof(input)){
-			expression[0] = '\0';
-			fscanf(input, "%u %[^\n]", &result, expression);
-			if(expression[0] == '\0'){
-				printflog("The empty string is scanfed\n");
-				break;
-			}
-			expr_result = expr(expression, &success);
-			if(!success){
-				printflog("\"make_token\" 失败\n");
-				break;
-			}
-
-			printflog("Expression: %s\nAnswer: %u\n Your answer: %u\n", expression, result, expr_result);
-
-			if(result == expr_result){
-				printflog("点一下，玩一年，计算不花一分钱\n");
-			}
-			else{
-				printflog("算对是不可能算对的，就算从这里跳下去，死外面\n");
-				//assert(0);
-			}
+	char e[65536];
+	uint32_t ans;
+	bool success;
+	for(int i=0;i<100;i++) {
+		fscanf(fp,"%d",&ans);
+		e[0]='\0';  success=true;
+		fgets(e,65536,fp);
+		e[strlen(e)-1]='\0';
+		uint32_t tmp=expr(e,&success);
+		if(!success) {
+			printf("Match Failed at %d line,with equation\n: %s",i+1,e);
+			exit(0);
+		}
+		if(tmp==ans)
+			printf("Line:%d: Success\n",i+1);
+		else {
+			printf("Error at %d line, with the equation: %s, should get %u, but get %u\n",i+1,e,ans,tmp);
+			exit(0);
 		}
 	}
-	else{
-		printflog("\"input\"文件打开失败\n");
-	}
-	//*/
-	#endif
+	fclose(fp);
+
+*/
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);

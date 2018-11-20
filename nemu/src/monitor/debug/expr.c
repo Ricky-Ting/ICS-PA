@@ -1,5 +1,6 @@
 #include "nemu.h"
-#include "monitor/expr.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -7,11 +8,14 @@
 #include <sys/types.h>
 #include <regex.h>
 
-#include<string.h>
-#include<stdio.h>
+
+bool check_parentheses(int p, int q);
+uint32_t eval(int p, int q); 
+int get_priority(int type);
+
 
 enum {
-  TK_NOTYPE = 256, TK_DI, TK_HE, TK_RE, TK_EQ, TK_NE, TK_AN, TK_DR
+  TK_NOTYPE = 256, TK_EQ, TK_LP, TK_RP, TK_PLUS, TK_MINU, TK_MULT, TK_DIVI,  TK_DEC, TK_HEX, TK_REG, TK_NEQ , TK_AND, TK_DEREF, TK_UND
 
   /* TODO: Add more token types */
 
@@ -25,44 +29,20 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
-  {" +", TK_NOTYPE},          // spaces
-  {"\\+", '+'},               // plus
-	{"-",   '-'},               // sub
-	{"\\*",   '*'},             // mult
-	{"/",   '/'},               // divide
-
-	{"\\(",   '('},             // left bracket
-	{"\\)",   ')'},             // right bracket
-
-	{"\\b[0-9]+\\b", TK_DI},    // digit
-	{"\\b0x[0-9a-z]+\\b", TK_HE},  // hexadeimal numbr
-	{"\\$[a-z]{2,3}", TK_RE},     // register
-
-  {"==", TK_EQ},              // equal
-	{"!=", TK_NE},
-	{"&&", TK_AN}              // and
+  {"0x[0-9a-fA-F]+", TK_HEX}, //Hexadecimal number
+	{"\\$[A-Za-z]+",TK_REG},    // register
+  {" +", TK_NOTYPE},    // spaces
+	{"\\(", TK_LP},         // left parenthesis
+	{"\\)",TK_RP},					// right parenthesis
+	{"\\*", TK_MULT},					//multiply
+	{"/", TK_DIVI},           // divide
+  {"\\+", TK_PLUS},         // plus
+	{"-",TK_MINU},            // minus
+	{"[0-9]+", TK_DEC},    // decimal number
+  {"==", TK_EQ},         // equal
+	{"!=",TK_NEQ},        // not equal
+	{"&&",TK_AND},        // AND
 };
-
-int get_priority(int sign){
-	switch(sign){
-		case TK_DR:
-			return 2;
-		case '*':
-		case '/':
-			return 3;
-		case '+':
-		case '-':
-			return 4;
-		case TK_EQ:
-		case TK_NE:
-			return 7;
-		case TK_AN:
-			return 11;
-		default:
-			return 0;
-	}
-}
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
 
@@ -90,7 +70,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-Token tokens[32];
+Token tokens[65536];
 int nr_token;
 
 static bool make_token(char *e) {
@@ -104,60 +84,50 @@ static bool make_token(char *e) {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i ++) {
       if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
-				//Log("expression:%s", e+position);
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
-        //Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            //i, rules[i].regex, position, substr_len, substr_len, substr_start);
+
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+			
+
+						
         position += substr_len;
+		
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
 
         switch (rules[i].token_type) {
-					case TK_NOTYPE:
-						break;
-					case '+':
-					case '-':
-					case '*':
-					case '/':
-					case '(':
-					case ')':
-					case TK_EQ:
-					case TK_NE:
-					case TK_AN:
-						tokens[nr_token].type = rules[i].token_type;
+					case TK_DEC : 
+						tokens[nr_token].type=TK_DEC;  
+						//tokens[nr_token].str=substr_start;
+						strncpy(tokens[nr_token].str,substr_start,substr_len);
+						tokens[nr_token].str[substr_len]='\0';
 						nr_token++;
 						break;
-
-					case TK_DI:
-					case TK_HE:
-					case TK_RE:
-						tokens[nr_token].type = rules[i].token_type;
-						if(substr_len > 31){
-							//Log("Warning: The length of digital number is longer than 31. Only higher 31 bit will be token.\n"); //used to warning that the answer maybe wrong
-						}
-						strncpy(tokens[nr_token].str, substr_start, substr_len);
-						tokens[nr_token].str[substr_len] = '\0';
-						//tokens[nr_token].str[31] = '\0';
-						//Log("the stored things in tokens[nr_token].str::%s", tokens[nr_token].str);
-						//Log("nr_token:%d", nr_token);
+					case TK_HEX :
+						tokens[nr_token].type=TK_HEX;
+						strncpy(tokens[nr_token].str,substr_start,substr_len);
 						nr_token++;
 						break;
-
-          default: //TODO();
-						Log("Warning: Un expected sign in make_token() in expr.c \n");
-						//assert(0);
+					case TK_REG :
+						tokens[nr_token].type=TK_REG;
+						strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);
+						nr_token++;
+						break;
+					case TK_NOTYPE :	break;
+					
+          default: 
+						tokens[nr_token].type=rules[i].token_type;
+						nr_token++;
+						break;
         }
-				//Log("the stored things in tokens[nr_token-1].type::%u\t%c", (uint32_t)tokens[nr_token-1].type, tokens[nr_token-1].type);
-				//Log("(int)e[position]:%d\tposition:%d", (int)e[position], position);
+
         break;
       }
     }
-
-		if(e[position] == '\0')// used to exclude the next judgement
-				break;
 
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
@@ -168,238 +138,158 @@ static bool make_token(char *e) {
   return true;
 }
 
-inline bool is_certain_type(int type){
-	return !(type == TK_DI || type == TK_HE || type == TK_RE);
-}
-
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
-	else
-		*success = true;
-
-	for(int i = 0;i < nr_token;i++){
-		if(tokens[i].type == '*' && (i == 0 || is_certain_type(tokens[i-1].type))){
-			tokens[i].type = TK_DR;
-		}
-	}
 
   /* TODO: Insert codes to evaluate the expression. */
-  //TODO();
-	uint32_t answer = eval(0, nr_token-1);
-	//Log("answer:::%u", answer);
-	return answer;
-  //return 0;
-}
-
-inline bool check_parentheses(int p, int q){
-	if(tokens[p].type == '(' && tokens[q].type == ')'){
-		int counter = 1;
-		for(int i = p+1;i <= q-1;i++){
-			if(tokens[i].type == '(')
-				counter++;
-			if(tokens[i].type == ')')
-				counter--;
-			if(!counter)
-				return false;
-		}
+	for(int i=0;i<nr_token;i++) {
+		if(tokens[i].type=='*' && (i==0 || (tokens[i-1].type!=TK_DEC && tokens[i-1].type!=TK_HEX && tokens[i-1].type!=TK_RP && tokens[i-1].type!=TK_REG  )))
+			tokens[i].type= TK_DEREF;
 	}
-	else
-		return false;
-	
-	return true;
+
+ uint32_t ans= (uint32_t)(eval(0,nr_token-1));
+return ans;
+
+  return 0;
 }
 
-uint32_t get_register_num(char* String, int p, int q){
+uint32_t eval(int p, int q)
+{
 	extern CPU_state cpu;
-	//Log("strlen(String):%u", (unsigned)strlen(String));
-	if(strlen(String) != 3 && strlen(String) != 4){
-		//Log("Error: The length of the string of resigter is not 3 or 4, but %d", (uint32_t)strlen(String));
-			return vaddr_read(eval(p+1, q), 4);
-		assert(0);
-	}
+	extern const char *regsl[];
+	extern const char *regsw[];
+	extern const char *regsb[];
 
-	if(String[1] == 'e'){
-		switch(String[2]){
-			case 'a':
-				if(String[3] == 'x')
-					return cpu.eax;
-				assert(0);
-			case 'c':
-				if(String[3] == 'x')
-					return cpu.ecx;
-				assert(0);
-			case 'd':
-				if(String[3] == 'x')
-					return cpu.edx;
-				if(String[3] == 'i')
-					return cpu.edi;
-				assert(0);
-			case 'b':
-				if(String[3] == 'x')
-					return cpu.ebx;
-				if(String[3] == 'p')
-					return cpu.ebp;
-				assert(0);
-			case 's':
-				if(String[3] == 'p')
-					return cpu.esp;
-				if(String[3] == 'i')
-					return cpu.esi;
-				assert(0);
-			case 'i':
-				if(String[3] == 'p')
-					return cpu.eip;
-				assert(0);
+
+	if(p>q) {
+		printf("This expr is invalid.\n");
+		exit(0);
+		return 0xffffffff;           // Use 0xffffffff to indicate the error.
+	}
+	else if (p==q) { 
+		if(tokens[p].type==TK_DEC)
+			return (uint32_t )(strtol(tokens[p].str,NULL,10));
+		if(tokens[p].type==TK_HEX)
+			return (uint32_t )(strtol(tokens[p].str,NULL,16));
+		if(tokens[p].type==TK_REG) {
+			for(int i=0;i<8;i++) 
+				if(strcmp(tokens[p].str,regsl[i])==0)
+					return reg_l(i);
+			for(int i=0;i<8;i++)
+				if(strcmp(tokens[p].str,regsw[i])==0)	
+					return reg_w(i);
+			for(int i=0;i<8;i++)
+				if(strcmp(tokens[p].str,regsb[i])==0)
+				return reg_b(i);
+			if(strcmp(tokens[p].str,"eip")==0)
+				return cpu.eip;
+			printf("The letters should not be captitalized!\n");
 		}
 	}
-	else{
-		switch(String[1]){
-			case 'a':
-				if(String[2] == 'x')
-					return cpu.gpr[0]._16;
-				if(String[2] == 'l')
-					return cpu.gpr[0]._8[0];
-				if(String[2] == 'h')
-					return cpu.gpr[0]._8[1];
-				assert(0);
-			case 'c':
-				if(String[2] == 'x')
-					return cpu.gpr[1]._16;
-				if(String[2] == 'l')
-					return cpu.gpr[1]._8[0];
-				if(String[2] == 'h')
-					return cpu.gpr[1]._8[1];
-				assert(0);
-			case 'd':
-				if(String[2] == 'x')
-					return cpu.gpr[2]._16;
-				if(String[2] == 'l')
-					return cpu.gpr[2]._8[0];
-				if(String[2] == 'h')
-					return cpu.gpr[2]._8[1];
+	else if (check_parentheses(p,q)) 
+		return eval(p+1,q-1);
+	else if (q-p==1 && tokens[p].type==TK_DEREF) {
+		return vaddr_read(eval(p+1,q),4);
+	} 
+	else {
+		int op=TK_UND;
+		int pos=-1;
+		int a=p; int b=q;
+		while(a<b)
+		{
+			int cnt=0;
+			if(tokens[a].type==TK_LP) {
+				do {
+					if(tokens[a].type==TK_LP) 
+						cnt++;
+					if(tokens[a].type==TK_RP) 
+						cnt--;
+					a++;
+				}while(cnt>0);
+				a--;
+			}
+			else if(get_priority(tokens[a].type)!=-1 && get_priority(tokens[a].type)<=get_priority(op)) {
+				op=tokens[a].type;
+				pos=a;
+			}
+			a++;
+		}
+		/* debug code
+		switch(op) {
+			case TK_PLUS: printf("+ %d\n",pos); break;
+			case TK_MINU: printf("- %d\n",pos); break;
+			case TK_MULT: printf("* %d\n",pos); break;
+			case TK_DIVI: printf("/ %d\n",pos); break;
+		
+		}
+		*/
 
-				if(String[2] == 'i')
-					return cpu.gpr[7]._16;
-				assert(0);
-			case 'b':
-				if(String[2] == 'x')
-					return cpu.gpr[3]._16;
-				if(String[2] == 'l')
-					return cpu.gpr[3]._8[0];
-				if(String[2] == 'h')
-					return cpu.gpr[3]._8[1];
-
-				if(String[2] == 'p')
-					return cpu.gpr[5]._16;
-				assert(0);
-			case 's':
-				if(String[2] == 'p')
-					return cpu.gpr[4]._16;
-				if(String[2] == 'i')
-					return cpu.gpr[6]._16;
-				assert(0);
-
+		uint32_t val1 = eval(p,pos-1);
+		uint32_t val2 = eval(pos+1,q);	
+	//	if(val1==0xffffffff  || val2==0xffffffff)
+		//		return 0xffffffff;
+		switch(op) {
+			case TK_PLUS: return val1+val2;
+			case TK_MINU: return val1-val2;
+			case TK_MULT: return val1*val2;
+			case TK_DIVI: 
+				if(val2==0) { 
+					printf("divide by 0\n");
+					exit(0);
+				}
+				return val1/val2; 
+			case TK_EQ: return val1==val2;
+			case TK_NEQ: return val1!=val2;
+			case TK_AND: return val1&&val2;
 		}
 	}
-
-	assert(0);
-	return 0;
+	return 0xffffffff;
 }
 
-uint32_t eval(int p, int q){
-	if(p > q){
-		//Log("Enter eval() \"p>q\"");
-		assert(0);
-		return 0;
-	}
 
-	else if(p == q){
-		//Log("Enter eval() \"p==q\"");
-		uint32_t num = 0;
-		switch(tokens[p].type){
-			case TK_DI:
-				sscanf(tokens[p].str, "%u", &num);
-				break;
-			case TK_HE:
-				sscanf(tokens[p].str, "%x", &num);
-				break;
-			case TK_RE:
-				num = get_register_num(tokens[p].str, p, q);
-				break;
-		}
-		//sscanf(tokens[p].str, "%x", &num);
-		//Log("char* kinds of num::%s", tokens[p].str);
-		//Log("type:%d", tokens[p].type);
-		//Log("p:::%d", p);
-		//Log("num in (p==q)::%u", num);
-		return num;
-	}
-
-	else if(check_parentheses(p, q)){
-		//Log("Enter eval() \"check_parentheses(%d, %d)\"", p, q);
-		return eval(p+1, q-1);
-	}
-
-	else{
-		//Log("Enter eval() else");
-		int num_of_right_bracket = 0;// Used to record the number of let bracket
-		int main_prio = 0;
-		int main_posi = -1;
-		for(int i = q;i >= p;i--){
-			if(tokens[i].type == ')'){
-				num_of_right_bracket++;
-				continue;
-			}
-			if(tokens[i].type == '('){
-				num_of_right_bracket--;
-				continue;
-			}
-			if(num_of_right_bracket)
-				continue;
-
-			if(tokens[i].type == TK_DI || tokens[i].type == TK_HE)
-				continue;
-			
-			//Log("get_priority(tokens[i].type): %d\ttokens[i].type: %d\tmain_prio: %d", get_priority((int)tokens[i].type), (int)tokens[i].type,  main_prio);
-			if(get_priority((int)tokens[i].type) > main_prio){
-				//Log("tokens[i].type: %c\ti: %d", tokens[i].type, i);
-				main_prio = get_priority((int)tokens[i].type);
-				main_posi = i;
-			}
-		}
-		//Log("main_prio: %c\tmain_posi: %d", tokens[i].type, i);
-
-		if(tokens[main_posi].type == TK_DR){// used to del with dereference
-			return vaddr_read(eval(p+1, q), 4);
-		}
-
-		uint32_t val1 = eval(p, main_posi-1);
-		uint32_t val2 = eval(main_posi+1, q);
-
-		//Log("val1: %d\tval2: %d", val1, val2);
-
-		switch(tokens[main_posi].type){
-			case '+': return val1 + val2;
-			case '-': return val1 - val2;
-			case '*': return val1 * val2;
-			case '/':
-				if(!val2){
-					//Log("Warning: 0 cannot used as divisor.");
-					return 0;
-				}
-				else
-					return val1 / val2;
-			
-			case TK_EQ: return val1 == val2;
-			case TK_NE: return val1 != val2;
-			case TK_AN: return val1 && val2;
-			default: 
-				//Log("Error in eval(), 'takens[main_posi].type' is not reconcile");
+bool check_parentheses(int p, int q) {
+	bool flag=true;
+	if(tokens[p].type!=TK_LP || tokens[q].type!=TK_RP)
+		flag=false;
+	int cnt=0;
+	for(int i=p;i<=q;i++) {
+		if(tokens[i].type==TK_LP)
+			cnt++;
+		if(tokens[i].type==TK_RP)
+			cnt--;
+		if(cnt==0 && i!=q)
+			flag=false;
+		if(cnt<0)
 			assert(0);
-		}
 	}
-	return 0;
+	if(cnt!=0) flag=false;
+	return flag;
+}
+
+
+int get_priority(int type) {
+	switch(type) {
+		case TK_MULT:
+		case TK_DIVI:
+			return 3;
+
+		case TK_PLUS:
+		case TK_MINU:
+			return 4;
+		
+		case TK_EQ:
+		case TK_NEQ:
+			return 7;
+
+		case TK_AND:
+			return 11;
+		
+		case TK_UND:
+			return 100;
+		default :
+			return -1;
+	}
 }

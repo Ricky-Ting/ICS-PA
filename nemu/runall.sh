@@ -20,12 +20,13 @@ fi
 
 files=`ls $AM_HOME/tests/cputest/build/*-x86-nemu.bin`
 ori_log="build/nemu-log.txt"
+qemu_so="$NEMU_HOME/tools/qemu-diff/build/qemu-so"
 
 for file in $files; do
   base=`basename $file | sed -e 's/-x86-nemu.bin//'`
   printf "[%14s] " $base
   logfile=$base-log.txt
-  $nemu -b -l $ori_log $file &> $logfile
+  $nemu -b -l $ori_log $file &> $logfile -d $qemu_so
 
   if (grep 'nemu: HIT GOOD TRAP' $logfile > /dev/null) then
     echo -e "\033[1;32mPASS!\033[0m"

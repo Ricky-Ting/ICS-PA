@@ -32,7 +32,6 @@ static inline make_DopHelper(I) {
  */
 /* sign immediate */
 static inline make_DopHelper(SI) {
-  //printf("Enter special space@v@, make_DopHelper:\t%#x\n", cpu.eip);
   assert(op->width == 1 || op->width == 4);
 
   op->type = OP_TYPE_IMM;
@@ -43,12 +42,14 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  //TODO();
-  uint32_t term = instr_fetch(eip, op->width);
-  //op->simm = term - (term>>(8*op->width-1))*((1<<(8*op->width)) );
-  op->simm = term - (term>>(op->width*8-1)&1)*(1<<(op->width*8-1)) - (term>>(op->width*8-1)&1)*(1<<(op->width*8-1));
-  //printf("term:%#x\top->width:%d\top->simm:%#x\n", term, op->width, op->simm);
-
+  // TODO();
+	op->simm= (instr_fetch(eip,op->width));
+	if(op->width==1) {
+		op->simm=(op->simm<<24)>>24;				
+					
+	}
+//	printf("%d\n",op->simm);
+	
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -77,7 +78,6 @@ static inline make_DopHelper(a) {
  * eXX: eAX, eCX, eDX, eBX, eSP, eBP, eSI, eDI
  */
 static inline make_DopHelper(r) {
-  //printf("enter here^_^\teip:%#x\n", cpu.eip);
   op->type = OP_TYPE_REG;
   op->reg = decoding.opcode & 0x7;
   if (load_val) {
@@ -136,9 +136,6 @@ make_DHelper(E2G) {
 
 make_DHelper(mov_E2G) {
   decode_op_rm(eip, id_src, true, id_dest, false);
-  //printf("mov_E2G: id_dest->val:%#x\n", id_dest->val);
-
-  //printf("id_src->addr:%#x\n", id_src->addr);
 }
 
 make_DHelper(lea_M2G) {
@@ -152,6 +149,14 @@ make_DHelper(I2a) {
   decode_op_a(eip, id_dest, true);
   decode_op_I(eip, id_src, true);
 }
+
+
+make_DHelper(SI2a) {  /*my add*/
+	 decode_op_a(eip, id_dest, true);
+  decode_op_SI(eip, id_src, true);
+				
+}
+
 
 /* Gv <- EvIb
  * Gv <- EvIv
@@ -183,7 +188,7 @@ make_DHelper(I2r) {
 }
 
 make_DHelper(mov_I2r) {
-  decode_op_r(eip, id_dest, false);
+ decode_op_r(eip, id_dest, false);
   decode_op_I(eip, id_src, true);
 }
 
@@ -293,8 +298,6 @@ make_DHelper(J) {
   decode_op_SI(eip, id_dest, false);
   // the target address can be computed in the decode stage
   decoding.jmp_eip = id_dest->simm + *eip;
-
-  //printf("id_dest->simm:%d\t*eip:%d\n", id_dest->simm, *eip);
 }
 
 make_DHelper(push_SI) {

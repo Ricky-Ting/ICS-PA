@@ -4,6 +4,8 @@
 #include "monitor/monitor.h"
 #include "diff-test.h"
 
+
+
 static void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
 static void (*ref_difftest_getregs)(void *c);
 static void (*ref_difftest_setregs)(const void *c);
@@ -51,11 +53,6 @@ void init_difftest(char *ref_so_file, long img_size) {
   ref_difftest_setregs(&cpu);
 }
 
-char* g_r_s(int index){
-  static char* cpu_string[14] = {"$eax", "$ecx", "$edx", "$ebx", "$esp", "$ebp", "$esi", "$edi", "$eip", "CF", "ZF", "SF", "IF", "OF"};
-  return cpu_string[index];
-} 
-
 void difftest_step(uint32_t eip) {
   CPU_state ref_r;
 
@@ -77,48 +74,23 @@ void difftest_step(uint32_t eip) {
   // TODO: Check the registers state with the reference design.
   // Set `nemu_state` to `NEMU_ABORT` if they are not the same.
   //TODO();
-  extern CPU_state cpu;
-  for(int i = 0;i < 8;i++){
-    if(cpu.gpr[i]._32 != ref_r.gpr[i]._32){
-      printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(i), ref_r.gpr[i]._32, g_r_s(i), cpu.gpr[i]._32);
-      nemu_state = NEMU_ABORT;
-    }
-  }
+	extern const char *regsl[];
+	uint32_t myregs[9];
+	ref_difftest_getregs(myregs);
+	for(int i=0;i<8;i++) { 
+		if(myregs[i]!=reg_l(i)) {
+					printf("wrong! %s should be %#x, but be %#x\n",regsl[i],myregs[i],reg_l(i));
+					nemu_state=NEMU_ABORT;
+			} 
+	}
+	if(myregs[8]!=cpu.eip) {
+					
+					printf("wrong! eip should be %#x, but be %#x\n",myregs[8],cpu.eip);
+					nemu_state=NEMU_ABORT;
+			}
+	
 
-  if(cpu.eip != ref_r.eip){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(8), ref_r.eip, g_r_s(8), cpu.eip);
-    nemu_state = NEMU_ABORT;
-  }
-  /*
-  if(cpu.IDTR.B != ref_r.IDTR.B || cpu.IDTR.L != ref_r.IDTR.L){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:IDTR.B:%#x\tcpu:IDTR.B:%#x\tref_r:IDTR.L:%#x\tcpu:IDTR.L:%#x\n", eip, ref_r.IDTR.B, cpu.IDTR.B, ref_r.IDTR.L, cpu.IDTR.L);
-    nemu_state = NEMU_ABORT;
-  }
-  */
-  /*
-  if(cpu_CF() != (ref_r.EFLAGS & 1)){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(9), cpu_CF(), g_r_s(9), (ref_r.EFLAGS & 1));
-    nemu_state = NEMU_ABORT;
-  }
 
-  if(cpu_ZF() != (ref_r.EFLAGS & 6)){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(10), cpu_ZF(), g_r_s(10), (ref_r.EFLAGS & 6));
-    nemu_state = NEMU_ABORT;
-  }
 
-  if(cpu_SF() != (ref_r.EFLAGS & 7)){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(11), cpu_ZF(), g_r_s(11), (ref_r.EFLAGS & 7));
-    nemu_state = NEMU_ABORT;
-  }
 
-  if(cpu_IF() != (ref_r.EFLAGS & 9)){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(12), cpu_IF(), g_r_s(12), (ref_r.EFLAGS & 9));
-    nemu_state = NEMU_ABORT;
-  }
-
-  if(cpu_OF() != (ref_r.EFLAGS & 11)){
-    printf("\33[1;31mdiff_test:different happen at eip:%#x, ref_r:%s:%#x\tcpu:%s:%#x\n", eip, g_r_s(13), cpu_OF(), g_r_s(13), (ref_r.EFLAGS & 11));
-    nemu_state = NEMU_ABORT;
-  }
-  */
 }
