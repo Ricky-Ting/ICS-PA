@@ -38,14 +38,10 @@ int _write(int fd, void *buf, size_t count){
 }
 
 extern char end;
-intptr_t  oldaddr=&(end);
-
 void *_sbrk(intptr_t increment){
-	intptr_t newaddr=oldaddr+increment;
-	 if(_syscall_(SYS_brk,newaddr,0,0)==0) {
-			intptr_t tmp=oldaddr;
-			oldaddr=newaddr;
-			return (void *)tmp;
+	intptr_t oldaddr=end;
+	 if(_syscall_(SYS_brk,end+increment,0,0)==0) {
+			return (void *)oldaddr;
 	}
 	else {
 		return (void *)-1;				

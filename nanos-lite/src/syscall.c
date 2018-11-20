@@ -2,6 +2,7 @@
 #include "syscall.h"
 #include "fs.h"
 
+extern char end;
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -23,7 +24,7 @@ _Context* do_syscall(_Context *c) {
 		case SYS_lseek: c->GPRx=fs_lseek(a[1],a[2],a[3]); break;
 		case SYS_open: c->GPRx=fs_open((const char *)a[1],a[2],a[3]);  break;
 
-		case SYS_brk: c->GPRx=0;  break;
+		case SYS_brk: end=a[1]; c->GPRx=0;  break;
 
 		
 		case SYS_exit: /*printf("in\n");*/ _halt(c->GPR2); break;
