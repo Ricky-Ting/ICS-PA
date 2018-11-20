@@ -2,21 +2,28 @@
 #include <x86.h>
 #include <amdev.h>
 
-#define TIMER_PORT 0x48
-
-static uint64_t timer_base;
-static _UptimeReg timer_now;
+_UptimeReg myoldtime;
+_UptimeReg systemtime;
 
 size_t timer_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
     case _DEVREG_TIMER_UPTIME: {
       _UptimeReg *uptime = (_UptimeReg *)buf;
-      uint32_t get_time = inl(TIMER_PORT);
-      if(get_time < timer_base)
-        timer_now.hi++;
-      timer_now.lo = get_time - timer_base;
-      uptime->hi = timer_now.hi;
-      uptime->lo = timer_now.lo;
+      uptime->lo = inl(0x48);
+			if(uptime->lo<myoldtime.lo)
+							myoldtime.hi++;
+			myoldtime.lo=uptime->lo;
+			
+			if(uptime->lo>=systemtime.lo) {
+					uptime->lo=uptime->lo - systemtime.lo;
+					uptime->hi=myoldtime.hi;
+			}
+			else {
+					uptime->lo=0xffffffff-systemtime.lo+uptime->lo;
+					uptime->hi=myoldtime.hi-1;
+			}
+
+
       return sizeof(_UptimeReg);
     }
     case _DEVREG_TIMER_DATE: {
@@ -34,9 +41,8 @@ size_t timer_read(uintptr_t reg, void *buf, size_t size) {
 }
 
 void timer_init() {
-  //timer_base = add_pio_map(TIMER_PORT, 8, timer_read);
-  //*timer_base = clock();
-  timer_base = inl(TIMER_PORT);
-  timer_now.lo = timer_base;
-  timer_now.hi = 0;
+	systemtime.lo=inl(0x48);
+	systemtime.hi=0;
+	myoldtime.lo=0;
+	myoldtime.hi=0;
 }

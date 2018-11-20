@@ -9,22 +9,22 @@
 typedef uint32_t size_t;
 
 struct _Context {
-  //uintptr_t esi, ebx, eax, eip, edx, err, eflags, ecx, cs, esp, edi, ebp;
-  //struct _Protect *prot;
-  //int       irq;
-  //uintptr_t eip, err, eflags, cs;
-  //uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
-  struct _Protect *prot;
-  uintptr_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-  int       irq;
-  uintptr_t err, eip, cs, eflags;
+//  uintptr_t esi, ebx, eax, eip, edx, err, eflags, ecx, cs, esp, edi, ebp;
+//  struct _Protect *prot;
+//  int       irq;
+
+	struct _Protect *prot;
+	uintptr_t edi,esi,ebp,esp,ebx,edx,ecx,eax;
+	int irq;
+	uintptr_t err;
+	uintptr_t eip,cs,eflags;
 };
 
 #define GPR1 eax
 #define GPR2 ebx
 #define GPR3 ecx
 #define GPR4 edx
-#define GPRx eip
+#define GPRx eax
 
 #ifdef __cplusplus
 extern "C" {
