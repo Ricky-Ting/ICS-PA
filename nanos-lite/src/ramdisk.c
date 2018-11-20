@@ -13,7 +13,6 @@ extern uint8_t ramdisk_end;
 size_t ramdisk_read(void *buf, size_t offset, size_t len) {
   assert(offset + len <= RAMDISK_SIZE);
   memcpy(buf, &ramdisk_start + offset, len);
-  //printf("ramdisk_read: hehehe\n");
   return len;
 }
 
@@ -23,6 +22,8 @@ size_t ramdisk_write(const void *buf, size_t offset, size_t len) {
   memcpy(&ramdisk_start + offset, buf, len);
   return len;
 }
+
+
 
 void init_ramdisk() {
   Log("ramdisk info: start = %p, end = %p, size = %d bytes",

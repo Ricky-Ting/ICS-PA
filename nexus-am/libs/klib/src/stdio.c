@@ -1,215 +1,203 @@
 #include "klib.h"
 #include <stdarg.h>
 
+//#ifndef __ISA_NATIVE__
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-#define true 1
-#define false 0
-#define bool char
+#define BUFF_SIZE 1<<12
+char buffer[BUFF_SIZE];//数组大小可调
 
-void parse_str(int a, char str[]);
-void parse_int(char *str ,int * a);
-int printf(const char *fmt, ...) { /*maybe buggy */
-  char buf[200];
-	va_list ap;
-	va_start(ap,fmt);
-	int a=vsprintf(buf,fmt,ap);
-	if(a<0)
-			return a;
-	//_putc('i');
-	for(int i=0;buf[i]!='\0';i++) 
-			_putc(buf[i]);	
-	return a;
+char buf[128];
 
-	
+int printf(const char *fmt, ...) {
+  static char buff[BUFF_SIZE];
+  va_list ap = (va_list)((char*)(&fmt) + 4);
+  va_start(ap, fmt);
+  int r_num = vsprintf(buff, fmt, ap);
+  //printf("%s\n", buff);
+  va_end(ap);
+  for(char* s = buff;*s != '\0';s++){
+    //printf("%c", *s);
+    _putc(*s);
+  }
+  return r_num;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-				*out='\0';
-				while(*fmt!='\0') {
-					char myflags='\0';
-					char width[10]; width[0]='\0';
-		/*			c har precision[10];
-					char length='\0';
-					char specifier='\0';
-*/
-					if(*fmt!='%') {
-						*out=*fmt;
-						out++;
-						fmt++;
-						*out='\0';
-					}
-					else {
-			 					fmt++;
-						// get_flags  
-						while(*fmt==' ') {
-							myflags=' ';
-							fmt++;
-						}	
-						switch(*fmt) {
-							case '-': myflags='-'; fmt++; break;
-							case '+': myflags='+'; fmt++; break;
-							case '#': myflags='#'; fmt++; break;
-							case '0': myflags='0'; fmt++; break;
-							default: break;
-						}
+  char* p = buffer;
+  while(*fmt != '\0'){
+    while(*fmt != '\0'){
+    	//printf("hhh");
+  	  //printf("%c", *fmt);
+      if(*fmt == '\\'){
+        *p = *fmt;
+        *(p+1) = *(fmt+1);
+        p += 2, fmt += 2;
+      }
+      else if(*fmt == '%'){
+      	fmt++; 
+    	  break;
+  	}
+      else{
+        *p = *fmt;
+        p++, fmt++;
+      }
+    }
 
-						// get_width 
-						while((*fmt)>='0' && (*fmt)<='9') {
-							char tmp[2]; tmp[0]=*fmt; tmp[1]='\0';
-							strcat(width,tmp);
-							fmt++;
-						}
-						if(*fmt=='*') {
-							width[0]='*'; width[1]='\0';
-							fmt++;
-						}
+    //修改转换行为的标签
+    int width = 0;//used to record the asked width of float and int.
+    switch(*fmt){
+      case '-':
+      case '+':
+      case ' ':
+        assert(0);
+      case '#':
+        fmt++;
+        p[0] = '0';
+        p[1] = 'x';
+        p += 2;
+        break;
+      case '0':
+        fmt++;
+        while(*fmt <= '9' && *fmt >= '0'){
+          width = width*10+(int)(*fmt-'0');
+          fmt++;
+        }
+        break;
+      default: break;
+    }
+    if(width == 0)//make sure there is at least one number to be output
+      width++;
 
-/*						// get_precision
-						if(*fmt=='.') {
-									while((*fmt)>='0' && (*fmt)<='9') {
-											char tmp[2]; tmp[0]=*fmt; tmp[1]='\0';
-											strcat(precision,tmp);
-											fmt++;
-									}
-									if(*fmt=='*') {
-											precision[0]='*'; precision[1]='\0';
-											fmt++;
-									}
-						}
-							
-						// get_length
-						switch(*fmt) {
-							case 'h': length='h'; fmt++; break;
-							case 'l': length='l'; fmt++; break;
-							case 'L': length='L'; fmt++; break;
-							default: break;
-						}
-						
-*/
+    if(*fmt == '.'){
+      assert(0);
+    }
 
+    static char* s;
+    static int d;
+    static unsigned int ud;
+    int i;
+    static char d_c[11];
+    int x_ul = 0;
+    //Because they must be the first statement of their case while the first statement cannot be a declaration, so they are put here
+    switch(*fmt){
+      case 'c': assert(0); break;
+      case 's':
+        s = va_arg(ap, char*);
+        int len = 0;
+        while(s[len] != '\0'){
+        	//printf("%c", s[len]);
+          *p = s[len];
+          p++, len++;
+        }
+        fmt++;
+        break;
+      case 'd':
+      case 'i':
+        d = va_arg(ap, int);
+        //printf("hhh\n");
+        if(d < 0){
+          *p = '-';
+          p++;
+          d = -d;
+        }
+        for(i = 9;i >= 0;i--){
+          int rem = d%10;
+          d /= 10;
+          if(d == 0 && rem == 0)
+            break;
+          d_c[i] = rem + '0';
+          //printf("@%c\n", d_c[i]);
+        }
+        for(int j = 9-i;j < width;j++){
+          *p = '0';
+          p++;
+        }
+        for(i += 1;i < 10;i++){
+          //_putc(d_c[i]);
+          *p = d_c[i];
+          p++;
+        }
+        fmt++;
+        break;
+      case 'o': assert(0); break;
+      case 'x':
+        x_ul = 'a';
+      case 'p':
+        if(*fmt == 'p')
+          width = 8;
+      case 'X':
+        if(*fmt == 'X')
+          x_ul = 'A';
+        
+        ud = va_arg(ap, unsigned int);
+        //printf("hhh\n");
+        for(i = 9;i >= 0;i--){
+          int rem = ud%16;
+          ud /= 16;
+          if(ud == 0 && rem == 0)
+            break;
+          if(rem <= 9)
+            d_c[i] = rem + '0';
+          else
+            d_c[i] = rem + x_ul - 10;
+          //printf("@%c\n", d_c[i]);
+          //_putc(d_c[i]);
+        }
+        for(int j = 9-i;j < width;j++){
+          *p = '0';
+          p++;
+        }
+        for(i += 1;i < 10;i++){
+          *p = d_c[i];
+          p++;
+        }
+        fmt++;
+        break;
+      case 'u': assert(0); break;
+      case 'f':
+      case 'F': assert(0); break;
+      case 'e':
+      case 'E': assert(0); break;
+      case 'a':
+      case 'A': assert(0); break;
+      case 'g':
+      case 'G': assert(0); break;
+      case 'n': assert(0); break;
+    }
+  } 
+  *p = '\0';
+  for(char* p_ = buffer;p_ != p;p_++, out++){
+    *out = *p_;
+  }
+  *out = '\0';
 
-							if(*fmt== 'd'){
-								int a=va_arg(ap,int);
-								char str[20]; str[0]='\0';
-								parse_str(a,str);
-								int w=0;
-								
-								if(width[0]!='\0'){
-												if(width[0]!='*') {
-													parse_int(width,&w); 				
-												}
-								}
-								
-								if(myflags!='\0') {
-												if(myflags==' ') {
-														strcat(out," ");
-														out++;
-												}
-												else if(myflags=='+') {
-														if(a>0) {
-															strcat(out,"+");
-															out++;
-														}
-												}
-								
-								}
-
-								if(w>strlen(str)) {
-									char tmp[2]; tmp[1]='\0';
-									if(myflags=='0')
-													tmp[0]='0';
-									else
-													tmp[0]=' ';
-									for(int i=w;i>strlen(str);i--) {
-											strcat(out,tmp);
-											out++;
-									}
-
-								}
-
-
-								/*add +*/
-								strcat(out,str);
-								out+=strlen(str);
-								fmt++;
-								continue;
-							}
-							if(*fmt== 's'){
-
-								char *s=va_arg(ap,char *);
-								strcat(out,s);
-								out+=strlen(s);
-								fmt++;
-								continue;
-							}
-					}
-				}
-  return strlen(out);
+  return (int)(p-buffer);
 }
-
-		
-void parse_str(int a,char str[]){
-				char b;
-				bool isneg=false; bool isnegmax=false;
-				char str2[20];
-				if(a==0)  {
-						str[0]='0'; str[1]='\0';
-						return;
-				} 
-				else if(a <0) {
-						isneg=true;
-						int b=-a;
-						if(b==a){
-								isnegmax=true;
-								a=a+1;
-						} 
-						a=-a;
-				}
-				int i=0;
-				while(a!=0) {
-						b='0'+a%10;
-						str2[i]=b;
-						a=a/10;
-						i++;
-				}
-				if(isneg) {
-						if(isnegmax) {
-							str2[0]+=1;				
-						}
-						str2[i]='-';
-						i++;
-					}
-				
-				str2[i]='\0';
-				for(int j=0;j<i;j++)
-							str[j]=str2[i-j-1];
-				str[i]='\0';
-				return ;
-}
-
-
-void parse_int(char *str ,int * a) {
-	*a=0; int base=1; int b[20]; int length=strlen(str);
-	for(int i=0;i<length;i++,str++) 
-					b[length-i-1]=(*str)-'0';
-	for(int i=0;i<length;i++) {
-		(*a)+=(base*b[i]);			
-		base*=10;				
-	}
-	return;
-}
-
 
 int sprintf(char *out, const char *fmt, ...) {
-		va_list ap;
-		va_start(ap,fmt);
-		return vsprintf(out,fmt,ap);
-  return 0;
+  va_list ap =  (va_list)((char*)(&fmt) + 4);
+  va_start(ap, fmt);
+  int r_num = vsprintf(out, fmt, ap);
+  //printf("%s\n", out);
+  va_end(ap);
+  return r_num;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
-  return 0;
+  char buff[BUFF_SIZE];
+  va_list ap = (va_list)((char*)(&fmt) + 4);
+  va_start(ap, fmt);
+  vsprintf(buff, fmt, ap);
+  //printf("%s\n", buff);
+  va_end(ap);
+  char* s = buff;
+  int i;
+  for(i = 0;i < n-1 && s[i] != '\0';i++){
+    out[i] = s[i];
+  }
+  out[i] = '\0';
+  return i;
 }
 
 #endif

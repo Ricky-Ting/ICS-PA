@@ -1,6 +1,7 @@
 #include <am.h>
 #include <x86.h>
-#include <klib.h>
+#include "klib.h"
+
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
 
 void vectrap();
@@ -9,14 +10,17 @@ void vecnull();
 
 _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
+  //printf("irq_handle:\ntf.eax:%#x\ttf.ecx:%#x\ttf.edx:%#x\ttf.ebx:%#x\ntf.esp:%#x\ttf.ebp:%#x\ttf.esi:%#x\ttf.edi:%#x\ntf.eip:%#x\ttf.err:%#x\ttf.irq:%#x\n", tf->eax, tf->ecx, tf->edx, tf->ebx, tf->esp, tf->ebp, tf->esi, tf->edi, tf->eip, tf->err, tf->irq);
+  //printf("irq_handle: user_handler:%#x\n", user_handler);
   if (user_handler) {
     _Event ev;
-	//	printf("%d\n",tf->irq);
+    //printf("irq_handle: tf->irq:%#x\n", tf->irq);
     switch (tf->irq) {
-			case 0x80 : ev.event=_EVENT_SYSCALL;  break;
-			case 0x81 : ev.event=_EVENT_YIELD; break;
+      case 0x80:  ev.event = _EVENT_SYSCALL; break;
+      case 0x81:  ev.event = _EVENT_YIELD; break;
       default: ev.event = _EVENT_ERROR; break;
     }
+    //printf("irq_handle: ev.event:%#x\n", ev.event);
 
     next = user_handler(ev, tf);
     if (next == NULL) {
@@ -36,8 +40,9 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
   }
 
   // -------------------- system call --------------------------
+  idt[0x80] = GATE(STS_TG32, KSEL(SEG_KCODE), vecsys,  DPL_KERN);
   idt[0x81] = GATE(STS_TG32, KSEL(SEG_KCODE), vectrap, DPL_KERN);
-	idt[0x80] = GATE(STS_TG32, KSEL(SEG_KCODE), vecsys , DPL_KERN);
+
   set_idt(idt, sizeof(idt));
 
   // register event handler

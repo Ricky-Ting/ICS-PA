@@ -12,7 +12,7 @@ int main() {
   init_mm();
 #endif
 
-  Log("'My name is Van. I'm an artist. I'm a professional artist.' from Nanos-lite");
+  Log("'Hello World!' from Nanos-lite");
   Log("Build time: %s, %s", __TIME__, __DATE__);
 
   init_ramdisk();
@@ -26,7 +26,6 @@ int main() {
   init_fs();
 
   init_proc();
-
 #ifdef HAS_CTE
   _yield();
 #endif

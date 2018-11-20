@@ -8,7 +8,7 @@
 #include <am.h>
 #include <stdarg.h>
 
-//#define __NATIVE_USE_KLIB__
+#define __NATIVE_USE_KLIB__
 
 #ifdef __NATIVE_USE_KLIB__
 #define strlen my_strlen
@@ -22,9 +22,9 @@
 #define memcmp my_memcmp
 #define printf my_printf
 #define vsprintf my_vsprintf
+#define sprintf my_sprintf
 #define snprintf my_snprintf
 #endif
-
 
 #ifdef __cplusplus
 extern "C" {
