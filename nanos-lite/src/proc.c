@@ -19,9 +19,10 @@ void hello_fun(void *arg) {
   }
 }
 
+void naive_uload(PCB *pcb, const char* filename);
 void init_proc() {
-//			printf("in init_porc\n");
-			naive_uload(NULL,"/bin/pal");
+  //printf("init_proc: I'm here.\n");
+  naive_uload(NULL, "/bin/pal");
 }
 
 _Context* schedule(_Context *prev) {
