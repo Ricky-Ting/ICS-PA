@@ -8,61 +8,46 @@
 // this should be enough
 static char buf[65536];
 
-uint32_t choose(uint32_t n) {
-	return rand()%n;
+static inline int choose(int n){
+	return rand()%3;
 }
 
-void gen_num(void) {
-	if(choose(10)==5)
-		strcat(buf," ");
-	uint32_t number= (uint32_t)(rand()%65536); 
-	uint32_t tmp=(((uint32_t)(rand()%65536))<<16);
-	if(choose(10)==5)
-		number+=tmp;
-	char str[32];
-	sprintf(str,"%u",number);
-	strcat(buf,str);
-	return;
+static inline void gen_num(){
+	int num = rand();
+	char num_c[20];
+	sprintf(num_c, "%d", num%1000);
+	strcat(buf, num_c);
 }
 
-void gen_rand_op() {
-	if(choose(10)==5)
-		strcat(buf," ");
-	switch(choose(4)) {
-		case 0 : strcat(buf,"+"); break;
-		case 1 : strcat(buf,"-"); break;
-		case 2 : strcat(buf,"*"); break;
-		case 3 : strcat(buf,"/"); break;
+static inline void gen(char sign){
+	char Sign[2];
+	Sign[0] = sign;
+	Sign[1] = '\0';
+	strcat(buf, Sign);
+}
+
+static inline void gen_rand_op(){
+	char op[2];
+	switch(rand()%4){
+		case 0: op[0] = '+'; op[1] = '\0'; break;
+		case 1: op[0] = '-'; op[1] = '\0'; break;
+		case 2: op[0] = '*'; op[1] = '\0'; break;
+		case 3: op[0] = '/'; op[1] = '\0'; break;
 	}
-	return;
+	strcat(buf, op);
 }
 
-
-
+int TIMES;
 static inline void gen_rand_expr() {
-  switch(choose(3)) {
-		case 0: 
-			gen_num();
-			break;
-		case 1: 
-			strcat(buf,"(");
-		//	if(strlen(buf)>100)
-			//	gen_num();
-		//	else
-				gen_rand_expr();
-			strcat(buf,")");
-			break;
-		default:
-			if(strlen(buf)>3000)
-				gen_num();
-			else
-			 gen_rand_expr();
-			gen_rand_op();
-			if(strlen(buf)>3000)
-				gen_num();
-			else
-				gen_rand_expr();
-			break;
+	TIMES++;
+	if(TIMES > 10){
+		gen('1'); gen('0');
+		return;
+	}
+	switch(choose(6)){
+		case 0: case 3: gen_num(); break;
+		case 1: gen('('); gen_rand_expr(); gen(')'); break;
+		default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
 	}
 }
 
@@ -84,7 +69,8 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
-		buf[0]='\0';	
+		buf[0] = '\0';
+		TIMES = 0;
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);

@@ -5,4 +5,8 @@
 
 uint32_t expr(char *, bool *);
 
+uint32_t eval(int p, int q);
+
+int get_priority(int sign);
+
 #endif

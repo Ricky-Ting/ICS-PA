@@ -14,4 +14,6 @@ typedef uint8_t bool;
 
 #include "protocol.h"
 
+#define DIFF_TEST
+
 #endif

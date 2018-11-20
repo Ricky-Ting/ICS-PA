@@ -41,11 +41,9 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
-	if(!testify()) {
-		nemu_state = NEMU_STOP;
-		return;
-	}
-
+		bool is_continue = is_change();
+		if(!is_continue)
+			break;	
 #endif
 
 #ifdef HAS_IOE
