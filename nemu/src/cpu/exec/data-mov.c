@@ -160,7 +160,7 @@ make_EHelper(cwtl) {
         rtl_lr(&myAX,0,2);
 		rtl_sext(&t1,&myAX,2);
         myAX=(t1&0xffff) | myAX;
-		rtl_sr(0,&myAX,2);
+		rtl_sr(0,&myAX,4);
 
   }
   else {
@@ -169,7 +169,7 @@ make_EHelper(cwtl) {
       rtl_lr(&myAX,0,2);
       rtl_sext(&t1,&myAX,4);
       myAX=t1;
-      rtl_sr(0,&myAX,2);
+      rtl_sr(0,&myAX,4);
 
   }
 
