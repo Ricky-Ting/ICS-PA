@@ -1,13 +1,9 @@
 #include "cpu/exec.h"
 #include "monitor/monitor.h"
 
-
 void interpret_rtl_exit(int state) {
   nemu_state = state;
 }
-
-
-
 
 make_EHelper(nop) {
   print_asm("nop");
@@ -46,6 +42,7 @@ make_EHelper(nemu_trap) {
   difftest_skip_ref();
 #endif
 
+  //printf("exec_nemu_trap:cpu.eax:%d\n", cpu.eax);
   rtl_exit(NEMU_END);
 
   print_asm("nemu trap");
