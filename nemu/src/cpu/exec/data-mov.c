@@ -18,7 +18,7 @@ make_EHelper(pop) {
 	operand_write(id_dest,&id_dest->val);
   print_asm_template1(pop);
 }
-/*
+
 make_EHelper(pusha) {
   //TODO();
 	if(id_dest->width==2) {
@@ -65,36 +65,10 @@ make_EHelper(pusha) {
 
   print_asm("pusha");
 }
-*/
-make_EHelper(pusha) {
-    //TODO();
-    //printf("pusha:\neax:%#x\tecx:%#x\tedx:%#x\tebx:%#x\nesp:%#x\tebp:%#x\tesi:%#x\tedi:%#x\n", cpu.eax, cpu.ecx, cpu.edx, cpu.ebx, cpu.esp, cpu.ebp, cpu.esi, cpu.edi);
-    t0 = cpu.esp;
-    rtl_push(&cpu.eax);
-    rtl_push(&cpu.ecx);
-    rtl_push(&cpu.edx);
-    rtl_push(&cpu.ebx);
-    rtl_push(&t0);
-    rtl_push(&cpu.ebp);
-    rtl_push(&cpu.esi);
-    rtl_push(&cpu.edi);
-    
-    print_asm("pusha");
-}
 
-make_EHelper(popa) {
-    //TODO();
-    rtl_pop(&cpu.edi);
-    rtl_pop(&cpu.esi);
-    rtl_pop(&cpu.ebp);
-    rtl_pop(&t0);
-    rtl_pop(&cpu.ebx);
-    rtl_pop(&cpu.edx);
-    rtl_pop(&cpu.ecx);
-    rtl_pop(&cpu.eax);
-    
-    print_asm("popa");
-}/*
+
+
+
 make_EHelper(popa) {
   //TODO();
 		if(id_dest->width==2) {
@@ -142,7 +116,7 @@ make_EHelper(popa) {
 
   print_asm("popa");
 }
-*/
+
 make_EHelper(leave) {
   //TODO();
 	uint32_t Myebp;
@@ -153,7 +127,7 @@ make_EHelper(leave) {
 
   print_asm("leave");
 }
-/*
+
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
     //TODO();
@@ -179,7 +153,7 @@ make_EHelper(cltd) {
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
 }
-
+/*
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
    // TODO();
@@ -206,39 +180,10 @@ make_EHelper(cwtl) {
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
 }
+
+
 */
-
-make_EHelper(cltd) {
-  //printf("cltd:\tcpu.eax:%#x\t", cpu.eax);
-  if (decoding.is_operand_size_16) {
-    //TODO();
-    /*
-    rtl_msb(&t0, &cpu.eax, 2);
-    cpu.edx = t0<<31;
-    rtl_sext(&cpu.eax, &cpu.eax, 2);
-    */
-    if((int32_t)reg_w(R_AX) < 0)
-      reg_w(R_DX) = 0xffff;
-     else
-      reg_w(R_DX) = 0;
-  }
-  else {
-    //TODO();
-    /*
-    rtl_msb(&t0, &cpu.eax, 2);
-    cpu.edx = t0<<31;
-    */
-    if((int32_t)reg_l(R_EAX) < 0)
-      reg_l(R_EDX) = 0xffffffff;
-    else
-      reg_l(R_EDX) = 0;
-  }
-
-  //printf("cpu.eax:%#x\tcpu.edx:%#x\n", cpu.eax, cpu.edx);
-
-  print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
-}
-
+   
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
     //TODO();
