@@ -68,7 +68,6 @@ make_EHelper(pusha) {
 
 
 
-
 make_EHelper(popa) {
   //TODO();
 		if(id_dest->width==2) {
@@ -153,49 +152,25 @@ make_EHelper(cltd) {
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
 }
-/*
+
 make_EHelper(cwtl) {
   if (decoding.is_operand_size_16) {
    // TODO();
-		uint32_t myAX,myDX;
-		rtl_lr(&myAX,0,2);
-		if((myAX>>15)&0x1)
-				myDX=0xffff;
-		else
-				myDX=0;
-		rtl_sr(2,&myDX,2);
+		uint32_t myAX;
+        rtl_lr(&myAX,0,2);
+		rtl_sext(&t1,&myAX,2);
+        myAX=(t1&0xffff) | myAX;
+		rtl_sr(0,&myAX,2);
 
   }
   else {
    // TODO();
-		uint32_t myAX,myDX;
-		rtl_lr(&myAX,0,1);
-		if((myAX>>7)&0x1)
-				myDX=0xff;
-		else
-				myDX=0;
-		rtl_sr(2,&myDX,1);
+      uint32_t myAX;
+      rtl_lr(&myAX,0,2);
+      rtl_sext(&t1,&myAX,4);
+      myAX=t1;
+      rtl_sr(0,&myAX,2);
 
-  }
-
-  print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
-}
-
-
-*/
-   
-make_EHelper(cwtl) {
-  if (decoding.is_operand_size_16) {
-    //TODO();
-    t1 = 2;
-    rtl_sext(&t0, &reg_l(R_AX), t1);
-    reg_l(R_AX) = (t0 & 0xffff) | reg_l(R_AX);
-  }
-  else {
-    //TODO();
-    t1 = 4;
-    rtl_sext(&t0, &reg_l(R_AX), t1);
-    reg_l(R_AX) = t0;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
