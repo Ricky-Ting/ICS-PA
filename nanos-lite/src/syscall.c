@@ -26,8 +26,8 @@ _Context* do_syscall(_Context *c) {
 		case SYS_brk:  c->GPRx=0;  break;
 
 		
-		case SYS_exit: /*printf("in\n");*/ _halt(c->GPR2); break;
-		case SYS_execve: naive_uload(NULL,(const char *)a[1]); printf("in execve");  break; 
+		case SYS_exit: /*printf("in\n");*/ naive_uload(NULL,(const char *)a[1]);    /* _halt(c->GPR2); */ break;
+		case SYS_execve: naive_uload(NULL,(const char *)a[1]); /*printf("in execve");*/  break; 
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
