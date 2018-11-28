@@ -1,7 +1,7 @@
 #include "common.h"
 #include "syscall.h"
 #include "fs.h"
-
+#include "proc.h"
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
@@ -27,6 +27,7 @@ _Context* do_syscall(_Context *c) {
 
 		
 		case SYS_exit: /*printf("in\n");*/ _halt(c->GPR2); break;
+		case SYS_execve: naive_uload(NULL,(const char *)a[1]);   break; 
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
