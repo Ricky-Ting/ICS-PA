@@ -47,7 +47,7 @@ int fs_open(const char *pathname, int flags, int mode) {
 						file_table[i].open_offset=0;
 						return i;
 					}
-	panic("fs_open: should not reach here!");
+	panic("fs_open: should not reach here! ");
 }
 
 size_t fs_filesz(int fd) {
