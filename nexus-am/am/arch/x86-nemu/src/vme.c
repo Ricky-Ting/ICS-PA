@@ -1,5 +1,5 @@
 #include <x86.h>
-
+#include <klib.h>
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
 static PDE kpdirs[NR_PDE] PG_ALIGN;
@@ -80,5 +80,17 @@ int _map(_Protect *p, void *va, void *pa, int mode) {
 }
 
 _Context *_ucontext(_Protect *p, _Area ustack, _Area kstack, void *entry, void *args) {
-  return NULL;
+				ustack.end -= 1 * sizeof(uintptr_t);
+				uintptr_t ret = (uintptr_t) ustack.end;
+				*(uintptr_t *) ret =0;
+
+				_Context tmp;
+				tmp.cs=8;
+				tmp.eip=(uintptr_t)entry;
+				tmp.prot=p;
+			
+				memcpy( (void *)(ustack.end-sizeof(tmp)), (void *)(&tmp), sizeof(tmp)  );
+				return (ustack.end-sizeof(tmp));
+
+
 }

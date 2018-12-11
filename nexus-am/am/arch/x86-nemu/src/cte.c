@@ -50,10 +50,10 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
 	_Context tmp;
 	tmp.cs=8;
 	tmp.eip=(uintptr_t)(entry);
-	memcpy((void *)(stack.start - sizeof(tmp)), (void *)(&tmp), sizeof(tmp)  );
+	memcpy((void *)(stack.end - sizeof(tmp)), (void *)(&tmp), sizeof(tmp)  );
 	
 
-  return (stack.start - sizeof(tmp));
+  return (stack.end - sizeof(tmp));
 }
 
 void _yield() {
