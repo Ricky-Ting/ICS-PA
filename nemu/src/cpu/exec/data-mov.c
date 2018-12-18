@@ -193,3 +193,13 @@ make_EHelper(lea) {
   operand_write(id_dest, &id_src->addr);
   print_asm_template2(lea);
 }
+
+make_EHelper(mov_G2C) {
+	if(id_dest->reg==0) 
+					cpu.CR0=id_src->val;
+	else if(id_dest->reg==3) 
+					cpu.CR3=id_src->val;
+	else
+					assert(0);
+	print_asm_template2(movC);
+}
