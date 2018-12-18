@@ -50,6 +50,7 @@ paddr_t page_translate(vaddr_t addr) {
 					uint32_t offset = (addr)&0xfff;
 
 					uint32_t dir_entry=paddr_read(cpu.CR3+(pagedir)*4, 4 );
+					printf("%x\n",cpu.CR3);
 					assert(dir_entry&0x1);
 					uint32_t table_entry = paddr_read( ((dir_entry)&0xfff) + (page)*4, 4  );
 					assert(table_entry&0x1);
