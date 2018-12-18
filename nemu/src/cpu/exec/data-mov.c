@@ -194,23 +194,3 @@ make_EHelper(lea) {
   print_asm_template2(lea);
 }
 
-make_EHelper(mov_G2C) {
-	if(id_dest->reg==0) 
-					cpu.CR0=id_src->val;
-	else if(id_dest->reg==3) 
-					cpu.CR3=id_src->val;
-	else
-					assert(0);
-	print_asm_template2(mov_G2C);
-}
-
-make_EHelper(mov_C2G) {
-	if(id_src->reg==0)
-					id_src->val=cpu.CR0;
-	else if(id_src->reg==3)
-					id_src->val=cpu.CR3;
-	else
-					assert(0);
-	print_asm_template2(mov_C2G);
-}
-
