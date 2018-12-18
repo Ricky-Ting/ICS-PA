@@ -52,6 +52,8 @@ typedef struct {
 		};	
 	} eflags; */
 	rtlreg_t CS;
+	rtlreg_t CR0;
+	rtlreg_t CR3;
 	struct {
 		uint16_t low;
 		uint32_t high;
