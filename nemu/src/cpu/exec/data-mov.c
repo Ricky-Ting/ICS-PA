@@ -201,5 +201,16 @@ make_EHelper(mov_G2C) {
 					cpu.CR3=id_src->val;
 	else
 					assert(0);
-	print_asm_template2(movC);
+	print_asm_template2(mov_G2C);
 }
+
+make_EHelper(mov_C2G) {
+	if(id_src->reg==0)
+					id_src->val=cpu.CR0;
+	else if(id_src->reg==3)
+					id_src->val=cpu.CR3;
+	else
+					assert(0);
+	print_asm_template2(mov_C2G);
+}
+
