@@ -51,6 +51,7 @@ void vaddr_write(vaddr_t addr, uint32_t data, int len) {
 }
 
 paddr_t page_translate(vaddr_t addr) {
+					assert(0);
 					uint32_t pagedir = addr>>22;
 					uint32_t page = (addr>>12)&0x3ff;
 					uint32_t offset = (addr)&0xfff;
