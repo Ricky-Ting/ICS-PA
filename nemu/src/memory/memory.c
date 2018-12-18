@@ -27,6 +27,9 @@ void paddr_write(paddr_t addr, uint32_t data, int len) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
+	if(!( (cpu.CR0&0x1) && (cpu.CR0>>31)   ) )
+					return paddr_read(addr,len);
+
 	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  )			
 					assert(0);
 	else {
@@ -36,6 +39,9 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 }
 
 void vaddr_write(vaddr_t addr, uint32_t data, int len) {
+
+	if(!( (cpu.CR0&0x1) && (cpu.CR0>>31)   ) )
+					return paddr_write(addr,data,len);
  	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  )			
 					assert(0);
 	else {
@@ -45,8 +51,6 @@ void vaddr_write(vaddr_t addr, uint32_t data, int len) {
 }
 
 paddr_t page_translate(vaddr_t addr) {
-					if(!( (cpu.CR0&0x1) && (cpu.CR0>>31)   ) )
-									return addr;
 					uint32_t pagedir = addr>>22;
 					uint32_t page = (addr>>12)&0x3ff;
 					uint32_t offset = (addr)&0xfff;
