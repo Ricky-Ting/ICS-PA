@@ -55,20 +55,20 @@ paddr_t page_translate(vaddr_t addr) {
 					uint32_t pagedir = addr>>22;
 					uint32_t page = (addr>>12)&0x3ff;
 					uint32_t offset = (addr)&0xfff;
-					printf("In page_translate: aadr=%x\n",addr);
-					printf("In page translate: pagedir=%x\n",pagedir);
-					printf("In page translate: page=%x\n",page);
-					printf("In page translate: offset=%x\n",offset);
+			//		printf("In page_translate: aadr=%x\n",addr);
+			//		printf("In page translate: pagedir=%x\n",pagedir);
+			//		printf("In page translate: page=%x\n",page);
+			//		printf("In page translate: offset=%x\n",offset);
 					uint32_t dir_entry=paddr_read(cpu.CR3+(pagedir)*4, 4 );
-					printf("In page_translate : cr3=%x\n",cpu.CR3);
-					printf("In page_translate: dir_entry=%x\n",dir_entry);
+			//		printf("In page_translate : cr3=%x\n",cpu.CR3);
+			//		printf("In page_translate: dir_entry=%x\n",dir_entry);
 					assert(dir_entry&0x1);
 					uint32_t table_entry = paddr_read( ((dir_entry)& ~0xfff) + (page)*4, 4  );
-					printf("In page_translate: table_entry=%x\n",table_entry);
+				//	printf("In page_translate: table_entry=%x\n",table_entry);
 					assert(table_entry&0x1);
 					paddr_t ret = (table_entry&~0xfff) + offset;
 					assert(ret==addr);
-					printf("\n");
+				//	printf("\n");
 					return ret;
 
 				
