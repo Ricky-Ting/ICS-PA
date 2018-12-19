@@ -23,7 +23,7 @@ void init_proc() {
 //			printf("in init_porc\n");
 			context_uload(&pcb[1],"/bin/hello");
 		//context_kload(&pcb[0], (void *)hello_fun );
-		context_uload(&pcb[0],"/bin/pal");
+		context_uload(&pcb[0],"/bin/init");
 
 		switch_boot_pcb();
 }
