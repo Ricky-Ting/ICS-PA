@@ -27,7 +27,7 @@ void paddr_write(paddr_t addr, uint32_t data, int len) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-	if(!( (cpu.CR0&0x1) && (cpu.CR0>>31)   ) )
+	if(!(  (cpu.CR0>>31)   ) )
 					return paddr_read(addr,len);
 
 	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  )			
