@@ -24,7 +24,7 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
   for (i = 0; i < NR_PDE; i ++) {
     kpdirs[i] = 0;
   }
-	printf("In vme_init here\n");
+	//printf("In vme_init here\n");
   PTE *ptab = kptabs;
   for (i = 0; i < NR_KSEG_MAP; i ++) {
     uint32_t pdir_idx = (uintptr_t)segments[i].start / (PGSIZE * NR_PTE);
@@ -42,11 +42,11 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
       }
     }
   }
-	printf("In vme_init here here\n");
+	//printf("In vme_init here here\n");
   set_cr3(kpdirs);
-	printf("In vme_init set cr3 to %d\n",&kpdirs);
+	//printf("In vme_init set cr3 to %d\n",&kpdirs);
   set_cr0(get_cr0() | CR0_PG);
-	printf("sre cr0\n");
+	//printf("sre cr0\n");
 	printf("outof init\n");
   return 0;
 }
