@@ -61,7 +61,7 @@ paddr_t page_translate(vaddr_t addr) {
 					printf("In page_translate: dir_entry=%x\n",dir_entry);
 					assert(dir_entry&0x1);
 					uint32_t table_entry = paddr_read( ((dir_entry)&0xfff) + (page)*4, 4  );
-					printf("In page_translate: table_entry=%x",table_entry);
+					printf("In page_translate: table_entry=%x\n",table_entry);
 					assert(table_entry&0x1);
 					paddr_t ret = (table_entry&0xfff) + offset;
 					return ret;
