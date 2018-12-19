@@ -33,7 +33,9 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 					break;
 		}	
 	}
-	
+	pcb->cur_brk = DEFAULT_ENTRY + fs_filesz(fd);
+	pcb->max_brk = DEFAULT_ENTRY + nrofpage * PGSIZE;
+
 	fs_close(fd);
 //	printf("in loadder.c out\n");
 
