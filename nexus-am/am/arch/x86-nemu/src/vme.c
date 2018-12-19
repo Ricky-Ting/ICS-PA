@@ -80,6 +80,7 @@ int _map(_Protect *p, void *va, void *pa, int mode) {
 	if( !( updir[PDX(va)] & PTE_P)  ) {
 		uint32_t newpageaddr = (uint32_t)pgalloc_usr(1);
 		updir[PDX(va)] = (newpageaddr & ~0xfff) | PTE_P;
+		printf("In map : %x\n",updir[PDX(va)]);
 	}
 
 	PTE *this_page_table =  (PTE *)((uint32_t)( updir[PDX(va)] ) & ~0xfff);
