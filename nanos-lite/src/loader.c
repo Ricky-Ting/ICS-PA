@@ -10,13 +10,13 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	size_t tmp=fs_filesz(fd);
 //	printf("in loader.c size=%d\n",tmp);
 	uint8_t buf;
-	
+/*	
 	for(size_t  i=0;i<tmp;i++) {
 		fs_read(fd,&buf,1);
 		memset((void *)(DEFAULT_ENTRY+i),buf,1);
 	}
+*/	
 	
-	/*
 	int nrofpage=0;
 	int mode=0x1;
 	while(tmp>0) {
@@ -31,7 +31,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 					break;
 		}	
 	}
-	*/
+	
 	fs_close(fd);
 //	printf("in loadder.c out\n");
 
