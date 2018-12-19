@@ -65,7 +65,12 @@ paddr_t page_translate(vaddr_t addr) {
 					assert(dir_entry&0x1);
 					uint32_t table_entry = paddr_read( ((dir_entry)& ~0xfff) + (page)*4, 4  );
 				//	printf("In page_translate: table_entry=%x\n",table_entry);
-					assert(table_entry&0x1);
+				//	assert(table_entry&0x1);
+				if(!(table_entry & 0x1)) {
+						printf("In translate addr=%x\n",addr);
+						assert(0);
+								
+					}
 					paddr_t ret = (table_entry&~0xfff) + offset;
 			//		assert(ret==addr);
 //			if(addr==0x804a000)  {printf("In page translate, ret=%x\n",ret);assert(0); }
