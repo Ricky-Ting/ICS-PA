@@ -1,7 +1,7 @@
 #include "proc.h"
 #include "fs.h"
 
-#define DEFAULT_ENTRY 0x4000000
+#define DEFAULT_ENTRY 0x8048000
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
