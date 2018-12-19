@@ -252,7 +252,6 @@ void exec_wrapper(bool print_flag) {
 	if(cpu.INTR & ((cpu.eflags>>9)&0x1)) {
 		cpu.INTR = false;
 		raise_intr(IRQ_TIMER,cpu.eip);
-		printf("In exec, raise IRQ_TIMER\n");
 		update_eip();
 	}
 	
