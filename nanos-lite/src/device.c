@@ -28,7 +28,7 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 			key^=0x8000;
 			down=true;
 		}
-		if(key==1 || key==2 || key==3) {
+		if(key==_KEY_F1 || key==_KEY_F2 || key==_KEY_F3) {
 			if(down)
 					fg_pcb=key;
 		}
