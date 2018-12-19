@@ -55,7 +55,7 @@ paddr_t page_translate(vaddr_t addr) {
 					uint32_t pagedir = addr>>22;
 					uint32_t page = (addr>>12)&0x3ff;
 					uint32_t offset = (addr)&0xfff;
-			//		printf("In page_translate: aadr=%x\n",addr);
+			if(addr>0x100000)		printf("In page_translate: aadr=%x\n",addr);
 			//		printf("In page translate: pagedir=%x\n",pagedir);
 			//		printf("In page translate: page=%x\n",page);
 			//		printf("In page translate: offset=%x\n",offset);
