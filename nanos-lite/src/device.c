@@ -48,14 +48,13 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 								Log("Change to 3\n");
 								_yield();
 						} 
-		} 
-		else {
+		}
+		else {}
 			if(down) {
 				sprintf(buf,"kd %s\n",keyname[key]);				
 			} 
 			else
 				sprintf(buf,"ku %s\n",keyname[key]);
-		}
 	}
 	else {
 			sprintf(buf,"t %d\n",uptime());			
