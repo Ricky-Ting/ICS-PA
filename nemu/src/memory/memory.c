@@ -13,6 +13,7 @@ paddr_t page_translate(vaddr_t addr);
 /* Memory accessing interfaces */
 
 uint32_t paddr_read(paddr_t addr, int len) {
+	printf("In paddr_read: addr=%x\n",addr);
 	if(is_mmio(addr)==-1) 
   	return pmem_rw(addr, uint32_t) & (~0u >> ((4 - len) << 3));
 	else
