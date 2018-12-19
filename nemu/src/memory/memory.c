@@ -68,7 +68,7 @@ paddr_t page_translate(vaddr_t addr) {
 					assert(table_entry&0x1);
 					paddr_t ret = (table_entry&~0xfff) + offset;
 			//		assert(ret==addr);
-			if(addr==0x804a000) printf("In page translate, ret=%x\n",ret);
+			if(addr==0x804a000)  {printf("In page translate, ret=%x\n",ret);assert(0); }
 				//	printf("\n");
 					return ret;
 
