@@ -31,24 +31,24 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 		if(key==_KEY_F1 ) {
 			if(down) {
 					fg_pcb=1;
-					printf("Change to 1\n");
+					Log("Change to 1\n");
 					_yield();
 			}
 		}
 		else if(key==_KEY_F2) {
 						if(down) {
 								fg_pcb=2;
-								printf("Change to 2\n");
+								Log("Change to 2\n");
 								_yield();
-						}
+						} 
 		} 
 		else if(key==_KEY_F3) {
 						if(down) {
 								fg_pcb=3;
-								printf("Change to 3\n");
+								Log("Change to 3\n");
 								_yield();
-						}
-		}
+						} 
+		} 
 		else {
 			if(down) {
 				sprintf(buf,"kd %s\n",keyname[key]);				
