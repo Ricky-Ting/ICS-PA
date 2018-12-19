@@ -31,8 +31,16 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 	if(!(  (cpu.CR0>>31)   ) )
 					return paddr_read(addr,len);
 
-	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  )			
-					assert(0);
+	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  )	 {	
+					//assert(0);
+					uint32_t len2= (addr+len)&0xfff;
+					uint32_t len1= len - len2;
+					uint32_t data1=vaddr_read(addr,len1);
+					uint32_t data2=vaddr_read(addr+len1,len2);
+					uint32_t ret = (data2<<(len1*8)) + data1;
+					return ret;
+
+	}
 	else {
 					paddr_t paddr = page_translate(addr);
   				return paddr_read(paddr, len);
