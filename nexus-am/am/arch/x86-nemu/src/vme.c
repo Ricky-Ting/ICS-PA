@@ -103,6 +103,7 @@ _Context *_ucontext(_Protect *p, _Area ustack, _Area kstack, void *entry, void *
 				tmp.cs=8;
 				tmp.eip=(uintptr_t)entry;
 				tmp.prot=p;
+				tmp.eflags=0x1<<9;
 			
 				memcpy( (void *)(ustack.end-sizeof(tmp)), (void *)(&tmp), sizeof(tmp)  );
 				return (ustack.end-sizeof(tmp));

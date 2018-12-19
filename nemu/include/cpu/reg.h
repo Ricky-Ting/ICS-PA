@@ -54,6 +54,7 @@ typedef struct {
 	rtlreg_t CS;
 	rtlreg_t CR0;
 	rtlreg_t CR3;
+	bool INTR;
 	struct {
 		uint16_t low;
 		uint32_t high;
