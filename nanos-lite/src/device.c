@@ -29,16 +29,22 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 			down=true;
 		}
 		if(key==_KEY_F1 ) {
-			if(down)
+			if(down) {
 					fg_pcb=1;
+					_yield();
+			}
 		}
 		else if(key==_KEY_F2) {
-						if(down)
+						if(down) {
 								fg_pcb=2;
-		}
+								_yield();
+						}
+		} 
 		else if(key==_KEY_F3) {
-						if(down)
+						if(down) {
 								fg_pcb=3;
+								_yield();
+						}
 		}
 		else {
 			if(down) {
