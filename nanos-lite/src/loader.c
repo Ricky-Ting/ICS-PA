@@ -1,7 +1,7 @@
 #include "proc.h"
 #include "fs.h"
 
-#define DEFAULT_ENTRY 0x4000000
+#define DEFAULT_ENTRY 0x8048000
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
   //TODO();
@@ -10,12 +10,14 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 	size_t tmp=fs_filesz(fd);
 //	printf("in loader.c size=%d\n",tmp);
 	uint8_t buf;
-	
+/*	
 	for(size_t  i=0;i<tmp;i++) {
 		fs_read(fd,&buf,1);
 		memset((void *)(DEFAULT_ENTRY+i),buf,1);
 	}
-/*	
+
+*/	
+	
 	
 	int nrofpage=0;
 	int mode=0x1;
@@ -31,7 +33,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 					break;
 		}	
 	}
-	*/
+	
 	fs_close(fd);
 //	printf("in loadder.c out\n");
 
@@ -54,7 +56,7 @@ void context_kload(PCB *pcb, void *entry) {
 }
 
 void context_uload(PCB *pcb, const char *filename) {
-	//_protect( &(pcb->as));
+	_protect( &(pcb->as));
   uintptr_t entry = loader(pcb, filename);
 
   _Area stack;
