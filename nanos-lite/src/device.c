@@ -22,16 +22,23 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 	//printf("In events_read: ");
 	int key=read_key();
 	bool down=false;
+	extern int fg_pcb;
 	if(key!=_KEY_NONE) {
 		if(key & 0x8000) {
 			key^=0x8000;
 			down=true;
-		}			
-		if(down) {
-			sprintf(buf,"kd %s\n",keyname[key]);				
-		} 
-		else
-			sprintf(buf,"ku %s\n",keyname[key]);
+		}
+		if(key==1 || key==2 || key==3) {
+			if(down)
+					fg_pcb=key;
+		}
+		else {
+			if(down) {
+				sprintf(buf,"kd %s\n",keyname[key]);				
+			} 
+			else
+				sprintf(buf,"ku %s\n",keyname[key]);
+		}
 	}
 	else {
 			sprintf(buf,"t %d\n",uptime());			
