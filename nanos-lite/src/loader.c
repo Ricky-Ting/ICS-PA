@@ -27,7 +27,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		_map(&(pcb->as),( void * )DEFAULT_ENTRY+(nrofpage-1)*PGSIZE,pageaddr,mode);
 		for(int i=0;i<4096;i++) {
 			fs_read(fd,&buf,1);
-			memset(pageaddr,buf,1);
+			memset(pageaddr+i,buf,1);
 			tmp--;
 			if(tmp==0)
 					break;
