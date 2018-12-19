@@ -62,21 +62,30 @@ int _protect(_Protect *p) {
   return 0;
 }
 
-void _unprotect(_Protect *p) {
+void _unprotect(_Protect * p) {
 }
 
 static _Protect *cur_as = NULL;
-void get_cur_as(_Context *c) {
+void get_cur_as(_Context *c ) {
   c->prot = cur_as;
 }
 
 void _switch(_Context *c) {
   set_cr3(c->prot->ptr);
   cur_as = c->prot;
-}
+} 
 
 int _map(_Protect *p, void *va, void *pa, int mode) {
+	PDE *updir = p->ptr;
+	if( !( updir[PDX(va)] & PTE_P)  ) {
+		uint32_t newpageaddr = (uint32_t)pgalloc_usr(1);
+		updir[PDX(va)] = (newpageaddr & ~0xfff) | PTE_P;
+	}
+
+	PTE *this_page_table =  (PTE *)((uint32_t)( updir[PDX(va)] ) & ~0xfff);
+	this_page_table[PTX(va)]=    ((uint32_t)pa & ~0xfff)        |( mode & 0xfff);
 	
+		
   return 0;
 }
 
