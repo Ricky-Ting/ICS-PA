@@ -14,5 +14,5 @@
 #define PGROUNDDOWN(a)  (((a)) & ~PGMASK)
 
 void* new_page(size_t);
-
+int mm_brk(uintptr_t new_brk);
 #endif
