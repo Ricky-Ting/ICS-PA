@@ -80,6 +80,7 @@ void _switch(_Context *c) {
 
 int _map(_Protect *p, void *va, void *pa, int mode) {
 	PDE *updir = p->ptr;
+	printf("In map: va=%d pa=%d\n",va,pa);
 	if( !( updir[PDX(va)] & PTE_P)  ) {
 		uint32_t newpageaddr = (uint32_t)pgalloc_usr(1);
 		updir[PDX(va)] = (newpageaddr & ~0xfff) | PTE_P;
