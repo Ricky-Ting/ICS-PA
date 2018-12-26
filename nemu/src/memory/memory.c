@@ -51,8 +51,28 @@ void vaddr_write(vaddr_t addr, uint32_t data, int len) {
 
 	if(!(   (cpu.CR0>>31)   ) )
 					return paddr_write(addr,data,len);
- 	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  )			
-					assert(0);
+ 	if ( ((addr+len-1)&0xfff) < ((addr)&0xfff)  ) {			
+					//assert(0);
+					uint32_t len2= (addr+len)&0xfff;
+					uint32_t len1= len - len2;
+			
+					uint32_t data1,data2;
+					if(len1==1) 
+									data1 = data&0xff;
+					else if(len1==2) 
+									data1 = data&0xffff;
+					else if(len1==3)
+									data1 = data&0xffffff;
+					else
+									assert(0);
+					
+					data2=data>>(len1*8);
+	
+					vaddr_write(addr,data1,len1);
+					vaddr_write(addr+len1,data2,len2);
+					return ;
+
+	}
 	else {
 	 				paddr_t paddr = page_translate(addr);	
 					paddr_write(paddr, data, len);
