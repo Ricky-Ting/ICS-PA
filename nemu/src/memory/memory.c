@@ -55,7 +55,6 @@ void vaddr_write(vaddr_t addr, uint32_t data, int len) {
 					//assert(0);
 					uint32_t len2= (addr+len)&0xfff;
 					uint32_t len1= len - len2;
-					printf("In\n");	
 					uint32_t data1,data2;
 					if(len1==1) 
 									data1 = data&0xff;
