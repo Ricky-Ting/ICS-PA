@@ -18,7 +18,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 
 */	
 	
-	
 	int nrofpage=0;
 	int mode=0x1;
 	while(tmp>0) {
