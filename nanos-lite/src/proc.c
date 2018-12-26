@@ -21,17 +21,17 @@ void hello_fun(void *arg) {
 
 void init_proc() {
 //			printf("in init_porc\n");
-		//	context_uload(&pcb[0],"/bin/hello");
+			context_uload(&pcb[0],"/bin/hello");
 		//context_kload(&pcb[0], (void *)hello_fun );
-		context_uload(&pcb[1],"/bin/text");
-	//	context_uload(&pcb[2],"/bin/pal");
-	//	context_uload(&pcb[3],"/bin/pal");
+		context_uload(&pcb[1],"/bin/pal");
+		context_uload(&pcb[2],"/bin/pal");
+		context_uload(&pcb[3],"/bin/pal");
 		switch_boot_pcb();
 }
 
 _Context* schedule(_Context *prev) {
 	current->cp = prev;
-	current = &pcb[1];
-	//current =(current== &pcb[0]? &pcb[fg_pcb]:&pcb[0] );
+	//current = &pcb[1];
+	current =(current== &pcb[0]? &pcb[fg_pcb]:&pcb[0] );
 	return current->cp;
 }
